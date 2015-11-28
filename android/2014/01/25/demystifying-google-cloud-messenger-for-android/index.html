@@ -106,11 +106,12 @@
 <ol>
 <li>Our system that sends messages to GCM servers. This happens asynchronously. There is an HTTP API available and libraries wrapping around the HTTP API. </li>
 <li>Google Cloud Messenger is responsible for queuing and delivering messages to devices based on throttling rules, battery consumption rate, device idle state and network performance. The delivery model of GCM is bit different. This will be further elaborated throughout the post.</li>
-<li>Devices will receive messages and the operative system invoke the relevant application the message was intended to. For those of who knows Android will know that this is done via an <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html">Intent Broadcast</a>. 
-&lt;!&ndash; more &ndash;&gt;
-### Sender ID and API key
-Since Google provides us this service - we have to login to the Google Console and <a href="http://developer.android.com/google/gcm/gs.html#create-proj">create a project</a>. API key is a static key you get from the console. Sender ID is a bit of complex topic. </li>
+<li>Devices will receive messages and the operative system invoke the relevant application the message was intended to. For those of who knows Android will know that this is done via an <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html">Intent Broadcast</a>. </li>
 </ol>
+
+<h3>Sender ID and API key</h3>
+
+<p>Since Google provides us this service - we have to login to the Google Console and <a href="http://developer.android.com/google/gcm/gs.html#create-proj">create a project</a>. API key is a static key you get from the console. Sender ID is a bit of complex topic. </p>
 
 <p>A project can have 100 sender ids - and all these sender ids have to be stated in the client as well. This is useful for a scenario where there are multiple workers sending messages. </p>
 

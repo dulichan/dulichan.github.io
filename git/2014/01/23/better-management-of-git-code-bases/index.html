@@ -114,8 +114,6 @@
 
 <p><img src="https://docs.google.com/drawings/d/1vZc1yJJZ-BrfIfa3IuznrF_VWIf-3j15gbxrTm9WkvQ/pub?w=703&amp;h=589" alt="Git repos overall view"></p>
 
-<!-- more -->
-
 <p>Our current workflow has the server repo as our main repo and it is what everyone will build. It contains codebase that is regarding carbon and Jaggery modules. It also has our application repos as well. These application repos points to the master branch of each repo. When I want to get new updates from the child projects - I have to only pull the master branch inside the child project. I can go back to my server directory and commit the pulled codebase to the server codebase as updates from submodules. By having multiple projects in our workflow - dependencies created by child projects to each another is reduced.A minus point about this approach is that we have to pull changes from child projects. I&rsquo;ll be address this later in the blog post. But next comes the other important aspect of git. </p>
 
 <h1>Branching for good</h1>

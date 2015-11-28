@@ -22,9 +22,9 @@
 &lt;li&gt;Crappy UI (biggest turn off)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;em&gt;I know that I am ranting a bit but it’s personal finance&lt;/em&gt;
-&amp;lt;!&amp;ndash; more &amp;ndash;&amp;gt;
-Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;, an iPhone app that can be used to note costs easily. Beer , 320, Coffee 250 got it. It was all easier to collect the expenses now. Better yet, I could export all that data into a CSV file. &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;I know that I am ranting a bit but it’s personal finance&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;, an iPhone app that can be used to note costs easily. Beer , 320, Coffee 250 got it. It was all easier to collect the expenses now. Better yet, I could export all that data into a CSV file. &lt;/p&gt;
 
 &lt;p&gt;What I was missing now was some analytics on this data. I earlier had a Numbers (an Excel like program for Mac) sheet that did a decent job. Numbers was limited to the local machine and I had to manually enter the data from the CSV to the sheet. This was often messy and I forget to do this all the time. &lt;/p&gt;
 
@@ -174,11 +174,11 @@ Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;
         <title>CORS header support for WSO2 App Server with Apache Proxy</title>
         <description>&lt;p&gt;I will be explaining how to provide support for CORS (Cross Origin Resource Sharing) headers for JAX-RS services hosted on WSO2 Application Server. The support will be provided using Apache which is the proxy. I am going to use a sample deployed in WSO2 App server to demonstrate. &lt;/p&gt;
 
-&lt;p&gt;I have written a previous blog post on setting up &lt;a href=&quot;http://dulitha.me/blog/2014/09/07/load-balancing-proxy-for-wso2-servers/&quot;&gt;SSL on the Apache server&lt;/a&gt;. Please refer that for instructions on setting up SSL. Below is the configuration to setup CORS. Substitute ’10.100.0.167’ for the machine IP/domain. 
-&amp;lt;!&amp;ndash; more &amp;ndash;&amp;gt;
+&lt;p&gt;I have written a previous blog post on setting up &lt;a href=&quot;/wso2/2014/09/06/load-balancing-proxy-for-wso2-servers/&quot;&gt;SSL on Apache servers&lt;/a&gt; . Please refer that for instructions on setting up SSL. Below is the configuration to setup CORS. Substitute ’10.100.0.167’ for the machine IP/domain. &lt;/p&gt;
+
 &lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;Listen 443
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;NameVirtualHost &lt;em&gt;:443
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;VirtualHost *:443&amp;gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;NameVirtualHost *:443
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;VirtualHost *:443&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    #ProxyPreserveHost On
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;5&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    SSLEngine On
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;6&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    SSLProxyEngine On
@@ -188,22 +188,22 @@ Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;10&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    SSLProxyCheckPeerName off
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;11&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;12&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    RewriteEngine On
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;13&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    RewriteCond %&amp;#x7b;REQUEST_METHOD&amp;#x7d; OPTIONS
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;14&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    RewriteRule ^(.&lt;/em&gt;)$ $1 [R=200,L]
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;14&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    RewriteRule ^(.*)$ $1 [R=200,L]
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;15&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;16&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;17&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    # Set the path to SSL certificate
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;18&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    # Usage: SSLCertificateFile /path/to/cert.pem
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;19&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    SSLCertificateFile /private/etc/apache2/certs/server.crt
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;20&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    SSLCertificateKeyFile /private/etc/apache2/certs/server.key
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;21&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;22&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;23&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    ProxyPass / https://10.100.0.167:9444/
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;24&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    ProxyPassReverse / https://10.100.0.167:9444/
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;25&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;26&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    &amp;lt;IfModule mod_headers.c&amp;gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;27&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           SetEnvIf Origin (.&lt;em&gt;) AccessControlAllowOrigin=$1
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;28&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           SetEnvIf Access-Control-Request-Headers (.&lt;/em&gt;) AccessControlAllowHeaders=$1
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;25&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;26&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    &amp;lt;IfModule mod_headers.c&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;27&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           SetEnvIf Origin (.*) AccessControlAllowOrigin=$1
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;28&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           SetEnvIf Access-Control-Request-Headers (.*) AccessControlAllowHeaders=$1
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;29&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           Header always add Access-Control-Allow-Origin %&amp;#x7b;AccessControlAllowOrigin&amp;#x7d;e env=AccessControlAllowOrigin
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;30&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           Header always set Access-Control-Allow-Credentials true
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;31&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           Header always set Access-Control-Allow-Methods &amp;quot;POST, GET, OPTIONS, DELETE, PUT&amp;quot;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;31&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           Header always set Access-Control-Allow-Methods &quot;POST, GET, OPTIONS, DELETE, PUT&quot;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;32&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;           Header always set Access-Control-Allow-Headers %&amp;#x7b;AccessControlAllowHeaders&amp;#x7d;e env=AccessControlAllowHeaders
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;33&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    &amp;lt;/IfModule&amp;gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;34&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;35&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;/VirtualHost&amp;gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;33&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    &amp;lt;/IfModule&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;34&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;35&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;/VirtualHost&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
 
 &lt;p&gt;You need to have the below mods enabled in order for the above configuration to work.&lt;/p&gt;
 
@@ -311,8 +311,7 @@ Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;
 
 &lt;p&gt;The other option is to use the WSDL (Web Service Descriptor) to generate the stubs. WSDLs of the Admin Services are hidden by default. To enable them - change the flag in the carbon.xml - &lt;code&gt;&amp;lt;HideAdminServiceWSDLs&amp;gt;false&amp;lt;/HideAdminServiceWSDLs&amp;gt;&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;After that you can view the Admin Services deployed on the server by starting the server on OSGi mode. To start with OSGi mode run - &lt;code&gt;sh bin/wso2server.sh -DosgiConsole&lt;/code&gt;. Once the server finished booting up you can execute - &lt;code&gt;listAdminServices&lt;/code&gt;.
-&amp;lt;!&amp;ndash; more &amp;ndash;&amp;gt;&lt;/p&gt;
+&lt;p&gt;After that you can view the Admin Services deployed on the server by starting the server on OSGi mode. To start with OSGi mode run - &lt;code&gt;sh bin/wso2server.sh -DosgiConsole&lt;/code&gt;. Once the server finished booting up you can execute - &lt;code&gt;listAdminServices&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2&gt;Creating the Maven Project&lt;/h2&gt;
 
@@ -479,8 +478,7 @@ Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;
 
 &lt;p&gt;If we think node as a human - we are saying to node, “Hey dude, copy file to destination and once you’re done, execute this function too”.  Callbacks are needed to execute logic after some other logic has been executed. This is the holly grail of asynchronous programming. &lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;http://i.imgur.com/H5D9EWs.png&quot; alt=&quot;Callback joke&quot; &gt;
-&amp;lt;!&amp;ndash; more &amp;ndash;&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;http://i.imgur.com/H5D9EWs.png&quot; alt=&quot;Callback joke&quot; &gt;&lt;/p&gt;
 
 &lt;h2&gt;Now promises&lt;/h2&gt;
 
@@ -563,8 +561,6 @@ Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;
 &lt;li&gt;Device Management Agent&lt;/li&gt;
 &lt;li&gt;Activity Agent&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;!-- more --&gt;
 
 &lt;h2&gt;Device Management Agent&lt;/h2&gt;
 
@@ -649,11 +645,9 @@ Then I met &lt;a href=&quot;http://dailycost.com/&quot;&gt;Daily Costs&lt;/a&gt;
     
       <item>
         <title>Load Balancing Proxy for WSO2 Servers</title>
-        <description>&lt;p&gt;I have written a post previously about setting up &lt;a href=&quot;http://dulitha.me/blog/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/&quot;&gt;Apache Proxy for Carbon Servers on Mac OS X&lt;/a&gt;. This time - I will be focusing on the SSL aspect and load balancing aspect of it. For this particular use case I am going to take the WSO2 Identity Server. The final scenario is to have a deployment architecture where 2 WSO2 Identity Servers load balances the traffic coming to the Proxy. &lt;/p&gt;
+        <description>&lt;p&gt;I have written a post previously about setting up configurations in &lt;a href=&quot;/wso2/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/&quot;&gt;Apache Proxy for Carbon Servers on Mac OS X&lt;/a&gt;. This time - I will be focusing on the SSL aspect and load balancing aspect of it. For this particular use case I am going to take the WSO2 Identity Server. The final scenario is to have a deployment architecture where 2 WSO2 Identity Servers load balances the traffic coming to the Proxy. &lt;/p&gt;
 
 &lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;http://i.imgur.com/cfmvG2I.png&quot; alt=&quot;Simple load balancing use case&quot; &gt;&lt;/p&gt;
-
-&lt;!-- more --&gt;
 
 &lt;h2&gt;Finding httpd.conf&lt;/h2&gt;
 
@@ -770,8 +764,6 @@ In the new Apache version (Apache/2.4.16) below additional configs are needed to
 
 &lt;p&gt;Every type of device needs a management layer. 100s of light bulbs installed on a floor of a building needs to have a thin management layer to switch on/off them, token protection, update software. &lt;/p&gt;
 
-&lt;!-- more --&gt;
-
 &lt;h3&gt;Owning a device (Device Registration)&lt;/h3&gt;
 
 &lt;p&gt;Before I go on to talk about token protection let me elaborate a bit about device registration. I went to a shop and I bought a smart light bulb. How can I configure the light bulb so that it only works for my account? &lt;/p&gt;
@@ -836,8 +828,6 @@ In the new Apache version (Apache/2.4.16) below additional configs are needed to
 
 &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/0enT8Ko.png&quot; alt=&quot;Reference Architecture for IoT&quot;&gt;&lt;/p&gt;
 
-&lt;!-- more --&gt;
-
 &lt;p&gt;Our demonstration at the conference was an example of the reference architecture. There was one RaspberryPi that was connected to the Internet that pushed MQTT messages of the temperature of the conference hall. A Complex Event Processing server ran in the cloud performing realtime stream data analysis. If the temperature of the conference hall went beyond 30 C - the Complex Event Processing server sent an MQTT message to another RaspberryPi connected to the cloud which switched on the Fan once an MQTT message was received.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/PU51yjW.png&quot; alt=&quot;Reference Architecture for IoT with WSO2 Products&quot;&gt;&lt;/p&gt;
@@ -872,8 +862,6 @@ In the new Apache version (Apache/2.4.16) below additional configs are needed to
 &lt;p&gt;To start the apache server -&lt;/p&gt;
 
 &lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;sudo apachectl start&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;!-- more --&gt;
 
 &lt;h2&gt;Setup the Proxy Configs&lt;/h2&gt;
 

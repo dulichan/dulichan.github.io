@@ -99,11 +99,11 @@
           </h1>
           <p>I will be explaining how to provide support for CORS (Cross Origin Resource Sharing) headers for JAX-RS services hosted on WSO2 Application Server. The support will be provided using Apache which is the proxy. I am going to use a sample deployed in WSO2 App server to demonstrate. </p>
 
-<p>I have written a previous blog post on setting up <a href="http://dulitha.me/blog/2014/09/07/load-balancing-proxy-for-wso2-servers/">SSL on the Apache server</a>. Please refer that for instructions on setting up SSL. Below is the configuration to setup CORS. Substitute ’10.100.0.167’ for the machine IP/domain. 
-&lt;!&ndash; more &ndash;&gt;
+<p>I have written a previous blog post on setting up <a href="/wso2/2014/09/06/load-balancing-proxy-for-wso2-servers/">SSL on Apache servers</a> . Please refer that for instructions on setting up SSL. Below is the configuration to setup CORS. Substitute ’10.100.0.167’ for the machine IP/domain. </p>
+
 <figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>Listen 443
-</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>NameVirtualHost <em>:443
-</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;VirtualHost *:443&gt;
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>NameVirtualHost *:443
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;VirtualHost *:443>
 </div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    #ProxyPreserveHost On
 </div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLEngine On
 </div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyEngine On
@@ -113,22 +113,22 @@
 </div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyCheckPeerName off
 </div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteEngine On
 </div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteCond %&#x7b;REQUEST_METHOD&#x7d; OPTIONS
-</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteRule ^(.</em>)$ $1 [R=200,L]
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteRule ^(.*)$ $1 [R=200,L]
 </div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Set the path to SSL certificate
 </div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Usage: SSLCertificateFile /path/to/cert.pem
 </div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLCertificateFile /private/etc/apache2/certs/server.crt
 </div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLCertificateKeyFile /private/etc/apache2/certs/server.key
 </div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxyPass / https://10.100.0.167:9444/
 </div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxyPassReverse / https://10.100.0.167:9444/
-</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;IfModule mod_headers.c&gt;
-</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Origin (.<em>) AccessControlAllowOrigin=$1
-</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Access-Control-Request-Headers (.</em>) AccessControlAllowHeaders=$1
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;IfModule mod_headers.c>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Origin (.*) AccessControlAllowOrigin=$1
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Access-Control-Request-Headers (.*) AccessControlAllowHeaders=$1
 </div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always add Access-Control-Allow-Origin %&#x7b;AccessControlAllowOrigin&#x7d;e env=AccessControlAllowOrigin
 </div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Credentials true
-</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Methods &quot;POST, GET, OPTIONS, DELETE, PUT&quot;
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
 </div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Headers %&#x7b;AccessControlAllowHeaders&#x7d;e env=AccessControlAllowHeaders
-</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;/IfModule&gt;
-</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/VirtualHost&gt;</div></div></pre></div></figure></p>
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;/IfModule>
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/VirtualHost></div></div></pre></div></figure>
 
 <p>You need to have the below mods enabled in order for the above configuration to work.</p>
 
