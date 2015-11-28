@@ -1,0 +1,199 @@
+<html>
+  <head>
+    <meta content='Return 404 by default in WSO2 ESB - Tinker's thoughts~' property='og:title' />
+    <title>Return 404 by default in WSO2 ESB - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/wso2/2015/09/16/return-404-by-default-in-wso2-esb/' property='og:url' />
+  <meta content="WSO2 ESB by default responds to requests with 202 HTTP status code behavior. This behavior can be specially nuisance ..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/wso2/2014/12/08/calling-userstore-related-service-in-wso2-carbon-using-ws-client/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/wso2/2015/10/21/cors-header-support-for-wso2-as-with-apache-proxy/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>16 Sep 2015</div>
+            Return 404 by default in WSO2 ESB
+          </h1>
+          <p>WSO2 ESB by default responds to requests with 202 HTTP status code behavior. This behavior can be specially nuisance when exposing APIs or Proxy services from the ESB. In this post I am explaining two changes to be done to change this behavior where a 404 HTTP status code is returned. </p>
+
+<h2>Main sequence change</h2>
+
+<p>In the ESB - there are 2 main sequences called main sequence and fault sequence. ESB invokes the main sequence if no matching API or Proxy service is found. If an error occurs inside a sequence and no fault sequence has been defined, the fault sequence is called. The 2 sequences are present in the <ESB_HOME>/repository/deployment/server/synapse-configs/default/sequences. </p>
+
+<p>We are going to change the main sequence to return 404. </p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>main.xml</span><a class='code-highlight-caption-link' href='https://gist.github.com/90b8cfe840eb2248b267'>link</a></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nt">&lt;sequence</span> <span class="na">xmlns=</span><span class="s">&quot;http://ws.apache.org/ns/synapse&quot;</span> <span class="na">name=</span><span class="s">&quot;main&quot;</span><span class="nt">&gt;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&lt;description&gt;</span>The main sequence for the message mediation<span class="nt">&lt;/description&gt;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&lt;in&gt;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="c">&lt;!-- Log all messages passing through --&gt;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;log</span> <span class="na">level=</span><span class="s">&quot;full&quot;</span><span class="nt">/&gt;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="c">&lt;!-- Return 404 --&gt;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;HTTP_SC&quot;</span> <span class="na">value=</span><span class="s">&quot;404&quot;</span> <span class="na">scope=</span><span class="s">&quot;axis2&quot;</span><span class="nt">&gt;&lt;/property&gt;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;respond/&gt;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;drop&gt;&lt;/drop&gt;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&lt;/in&gt;</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nt">&lt;/sequence&gt;</span></div></div></pre></div></figure>
+
+<h2>404 from APIs</h2>
+
+<p>APIs are special implementations in synapse that has couple of resources attached to it. API implementation  of Synapse looks for a very specific sequence with the name - <code>_resource_mismatch_handler_</code> to call when no resource inside the API is invoked from the request. Otherwise it returns 202 HTTP response. Due to this - we have to create the below sequence and deploy.</p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>_resource_mismatch_handler_.xml</span><a class='code-highlight-caption-link' href='https://gist.github.com/90b8cfe840eb2248b267'>link</a></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c">&lt;!-- Exact sequence name as below should be there. This name is used inside the API implementation in Synapse --&gt;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nt">&lt;sequence</span> <span class="na">xmlns=</span><span class="s">&quot;http://ws.apache.org/ns/synapse&quot;</span> <span class="na">name=</span><span class="s">&quot;_resource_mismatch_handler_&quot;</span><span class="nt">&gt;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="nt">&lt;log</span> <span class="na">level=</span><span class="s">&quot;full&quot;</span><span class="nt">/&gt;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;HTTP_SC&quot;</span> <span class="na">value=</span><span class="s">&quot;404&quot;</span> <span class="na">scope=</span><span class="s">&quot;axis2&quot;</span><span class="nt">&gt;&lt;/property&gt;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="nt">&lt;respond/&gt;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="nt">&lt;drop&gt;&lt;/drop&gt;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nt">&lt;/sequence&gt;</span></div></div></pre></div></figure>
+
+<p>The historical reason of returning 202 lies back where the main sequence was shipped as a sample not as the default behavior of the WSO2 ESB product. It should be customized to suite the needs required. The same applies to <em>resource</em>mismatch<em>handler</em> sequence. </p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 07:16</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

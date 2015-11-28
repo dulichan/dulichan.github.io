@@ -1,0 +1,254 @@
+<html>
+  <head>
+    <meta content='Python based Device Agent for Internet of Things - Tinker's thoughts~' property='og:title' />
+    <title>Python based Device Agent for Internet of Things - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/iot/2014/09/22/python-based-device-agent-for-internet-of-things/' property='og:url' />
+  <meta content="Once we have all the backend infrastructure ready with Event Collection, Device Management etc etc - we need a Device..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/wso2/2014/09/06/load-balancing-proxy-for-wso2-servers/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/javascript/2014/10/08/javascript-promises-basics/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>22 Sep 2014</div>
+            Python based Device Agent for Internet of Things
+          </h1>
+          <p>Once we have all the backend infrastructure ready with Event Collection, Device Management etc etc - we need a Device Agent to connect the actual device with the aforementioned infastructure. I have embedded the <a href="http://wso2.com/whitepapers/a-reference-architecture-for-the-internet-of-things/">RA diagram</a> below to refresh our thoughts.</p>
+
+<p><img class="center" src="http://i.imgur.com/0enT8Ko.png" alt="Reference Architecture for IoT" > </p>
+
+<p>After thinking for a while - I got a feeling that there are 2 types of things that the agent does. </p>
+
+<ul>
+<li>Device Management Agent</li>
+<li>Activity Agent</li>
+</ul>
+
+<!-- more -->
+
+<h2>Device Management Agent</h2>
+
+<p>DM Agent is a generic component set that provide Device Management and utilities. For an example, DM Agent provides -</p>
+
+<ul>
+<li>Communication adaptors for MQTT, HTTP</li>
+<li>Device Enrollment</li>
+<li>Token Management</li>
+<li>Management for platform type</li>
+</ul>
+
+<h2>Activity Agent</h2>
+
+<p>​Activity Agent is a framework that allows developers to plugin custom Publishers and APIs. The framework can load the Publishers periodically and publish data using communication wrappers (provided from the framework). In a real world example - this is a temperature sensor publishing data to an API. </p>
+
+<p>The framework can expose custom API classes using MQTT / HTTP API wrapper. This allows external invocation of Hardware APIs via the wrapper. A Buzzer connected to a Raspberry Pi exposed as an API is the ideal example. </p>
+
+<p>The White Paper by WSO2 on the <a href="http://wso2.com/whitepapers/a-reference-architecture-for-the-internet-of-things/">Reference Architecture for the Internet of Things</a> explains all the components in IoT and give details on implementation of different components. The RA diagram was taken from it.</p>
+
+<h2>Architecture of the Agent</h2>
+
+<p>It would help to see the components of the Device Agent stacked together to better understand the agent architecture. </p>
+
+<p><img class="center" src="http://i.imgur.com/U3NqPLV.png" alt="Architecture of the Python Agent" > </p>
+
+<p>Before - I took an example of a Temperature sensor and a Buzzer actuator. Let&rsquo;s connect those to a RaspberryPi and see what the architecture looks like.</p>
+
+<p><img class="center" src="http://i.imgur.com/7rzCmxX.png" alt="Architecture of the Python Agent in Raspberry Pi" > </p>
+
+<h2>Implementation</h2>
+
+<p>Now comes the exciting part. I have started work on this at our <a href="https://github.com/dulichan/iot-ref-arch/tree/master/python-agent">RA for IoT Github repo</a>. Currently I have added support to RaspberryPi and BeagleBone Black. Lot of you might ask - why we chose Java instead of Python to write the base agent. This is mainly because of the out of the box support provided by most hardware to run python (RaspberryPi, BeagleBone, Arduino Yun). </p>
+
+<p>Currently I manage to obtain below data from both platforms -</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="err">&#39;hardware&#39;:</span> <span class="err">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;node&#39;:</span> <span class="err">&#39;beaglebone&#39;,</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;system&#39;:</span> <span class="err">&#39;Linux&#39;,</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;machine&#39;:</span> <span class="err">&#39;armv7l&#39;,</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;version&#39;:</span> <span class="err">&#39;#1SMPFriApr1101:</span> <span class="err">36:</span> <span class="err">09UTC2014&#39;,</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;release&#39;:</span> <span class="err">&#39;3.8.13-bone47&#39;,</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;processor&#39;:</span> <span class="err">&#39;&#39;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span><span class="err">,</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="err">&#39;platform&#39;:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;terse&#39;:</span> <span class="err">&#39;Linux-3.8.13-bone47-armv7l-with-glibc2.7&#39;,</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;alias&#39;:</span> <span class="err">&#39;Linux-3.8.13-bone47-armv7l-with-debian-7.4&#39;,</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;normal&#39;:</span> <span class="err">&#39;Linux-3.8.13-bone47-armv7l-with-debian-7.4&#39;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span><span class="err">,</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="err">&#39;python_info&#39;:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;version_tuple&#39;:</span> <span class="err">(&#39;2&#39;,</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;7&#39;,</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;3&#39;),</span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;version&#39;:</span> <span class="err">&#39;2.7.3&#39;,</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;build&#39;:</span> <span class="err">(&#39;default&#39;,</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;Mar14201417:</span> <span class="err">55:</span> <span class="err">54&#39;),</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;compiler&#39;:</span> <span class="err">&#39;GCC4.6.3&#39;</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span><span class="err">,</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="err">&#39;os&#39;:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;name&#39;:</span> <span class="err">(&#39;Linux&#39;,</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;beaglebone&#39;,</span>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;3.8.13-bone47&#39;,</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;#1SMPFriApr1101:</span> <span class="err">36:</span> <span class="err">09UTC2014&#39;,</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;armv7l&#39;,</span>
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="err">&#39;&#39;)</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span>
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="err">&#x7d;</span></div></div></pre></div></figure>
+
+<h2>WSO2 Device Manager</h2>
+
+<p>After the device enrollment and provisioning -the user can view the device on the Device Manager. All the Device Info is shown as key value pairs on the page. The plan is to show the APIs as operations on the Device Manager. </p>
+
+<p><img class="center" src="http://i.imgur.com/4qoIeis.png" alt="Device Management view of BeagleBone" > </p>
+
+<p>As for the enrollment part - I thought of writing a separate post on it. There are multiple enrollment mechanisms for IoT devices and the option we see is to support all of them. Right now - the implementation supports token based enrollment. This approach assumes that the agent knows a token that is already registered to a user on the device manager. </p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 20:02</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

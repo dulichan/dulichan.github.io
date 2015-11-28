@@ -1,0 +1,262 @@
+<html>
+  <head>
+    <meta content='Load Balancing Proxy for WSO2 Servers - Tinker's thoughts~' property='og:title' />
+    <title>Load Balancing Proxy for WSO2 Servers - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/wso2/2014/09/06/load-balancing-proxy-for-wso2-servers/' property='og:url' />
+  <meta content="I have written a post previously about setting up [Apache Proxy for Carbon Servers on Mac OS X](http://dulitha.me/blo..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/iot/2014/06/02/internet-of-things-and-device-management/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/iot/2014/09/22/python-based-device-agent-for-internet-of-things/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>06 Sep 2014</div>
+            Load Balancing Proxy for WSO2 Servers
+          </h1>
+          <p>I have written a post previously about setting up <a href="http://dulitha.me/blog/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/">Apache Proxy for Carbon Servers on Mac OS X</a>. This time - I will be focusing on the SSL aspect and load balancing aspect of it. For this particular use case I am going to take the WSO2 Identity Server. The final scenario is to have a deployment architecture where 2 WSO2 Identity Servers load balances the traffic coming to the Proxy. </p>
+
+<p><img class="center" src="http://i.imgur.com/cfmvG2I.png" alt="Simple load balancing use case" ></p>
+
+<!-- more -->
+
+<h2>Finding httpd.conf</h2>
+
+<p>This depends vastly on the OS. For Mac OS X - this is located usually <code>/etc/apache2/httpd.conf</code>. Red Hat Linux  put this file in <code>/etc/http.d/</code>. </p>
+
+<h2>Necessary modules</h2>
+
+<p>Apache server is broken into the core and modules. Some modules are not enabled by default in certain distributions. Modules are defined in the httpd.conf file. This file is read by apache server in startup to configure itself. Below are the necessary modules for Apache 2. Check if below modules are available in the httpd.conf. If not you’ll have to install them using your package manager-</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_module libexec/apache2/mod_proxy.so
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_connect_module libexec/apache2/mod_proxy_connect.so
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_ftp_module libexec/apache2/mod_proxy_ftp.so
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_http_module libexec/apache2/mod_proxy_http.so
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_scgi_module libexec/apache2/mod_proxy_scgi.so
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_ajp_module libexec/apache2/mod_proxy_ajp.so
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_balancer_module libexec/apache2/mod_proxy_balancer.so
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule ssl_module libexec/apache2/mod_ssl.so</div></div></pre></div></figure>
+
+<h2>Certificates for SSL</h2>
+
+<p>A certificate generation is necessary to perform SSL Proxy. We generate a private key using Open SSL. When generating the private key - use wso2carbon as the pass phrase. </p>
+
+<p><code>openssl genrsa -des3 -out server.key 1024</code></p>
+
+<p>Afterwards - we generate the Certificate signing request (.csr). </p>
+
+<p><code>openssl req -new -key server.key -out server.csr</code></p>
+
+<p>By using both the CSR request and the private key - we can generate a certificate for particular number of days.  </p>
+
+<p><code>openssl x509 -in server.csr -out server.crt -req -signkey server.key -days 365</code></p>
+
+<p>Copy your certificate file (server.crt) and private key (server.key) to a directory inside apache. Let’s put it to a folder called certs under apache. </p>
+
+<p>EDIT:- 
+In the new Apache version (Apache/2.4.16) below additional configs are needed to enable SSL inside the VirtualHost.
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyVerify none
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyCheckPeerCN off
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyCheckPeerName off</div></div></pre></div></figure></p>
+
+<h2>Configure Apache for certificates</h2>
+
+<p>Let’s get down and dirty with the https.conf file now. Forget about all the default configurations in the file and scroll to the bottom of the file. First we are going to add the balancer. We are adding the two server hostnames as balancer members. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;Proxy balancer://mycluster>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    Order Deny,Allow
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    Deny from none
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    Allow from all
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxySet lbmethod=byrequests
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Define back-end servers:
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Server 1
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    BalancerMember https://localhost:9443/
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>    BalancerMember https://localhost:9453/
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/Proxy></div></div></pre></div></figure>
+
+<p>Next we are going to configure a VirtualHost that uses the above balancer. First - apache will have to listen to <code>443</code> port. <code>443</code>is the default SSL port. The private key and the certificate is configured inside the virtual host. Also note that after the cluster name (mycluster) the ‘/‘ is necessary. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>Listen 443
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>NameVirtualHost *:443
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;VirtualHost *:443>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLEngine On
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyEngine On
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>   
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Set the path to SSL certificate
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLCertificateFile /private/etc/apache2/certs/server.crt
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLCertificateKeyFile /private/etc/apache2/certs/server.key
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>   
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Setup the balancer:
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxyPass / balancer://mycluster/
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxyPassReverse / balancer://mycluster/
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>       
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/VirtualHost></div></div></pre></div></figure>
+
+<h2>Configure the certificate password</h2>
+
+<p>Create a file in the certs folder as pass. Include below content to that file -</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>#!/bin/sh
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>echo "wso2carbon"</div></div></pre></div></figure>
+
+<p>In the httpd.conf file - outside the Virtual Host, put below configuration to setup the password. This will read the password from that file. Otherwise we have to provide the pass phrase of the private key every time we start the server. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>SSLPassPhraseDialog  exec:/private/etc/apache2/certs/pass</div></div></pre></div></figure>
+
+<p>Now if you access https://localhost - you’ll be proxyed to either Identity servers running in <code>9443</code>, <code>9453</code> ports. </p>
+
+<h2>Real world use case</h2>
+
+<p>There are several use cases for using a proxy. First - a proxy can be used to securely proxy traffic to the identity server sitting in the internal network. This way the proxy is in the DMZ. Another use case is to provide high availability (HA). The Proxy can be used to direct traffic to couple of servers where if a server goes down - other servers will continue to process requests. </p>
+
+<p><img class="center" src="http://i.imgur.com/mQxyBjl.png" alt="Real Deployment use case" ></p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 23:24</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

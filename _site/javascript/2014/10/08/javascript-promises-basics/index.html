@@ -1,0 +1,243 @@
+<html>
+  <head>
+    <meta content='JavaScript promises- basics - Tinker's thoughts~' property='og:title' />
+    <title>JavaScript promises- basics - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/javascript/2014/10/08/javascript-promises-basics/' property='og:url' />
+  <meta content="Before we get anywhere on promises, paying some tribute to callbacks is necessary evil. Below code uses a native node..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/iot/2014/09/22/python-based-device-agent-for-internet-of-things/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/wso2/2014/12/08/calling-userstore-related-service-in-wso2-carbon-using-ws-client/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>08 Oct 2014</div>
+            JavaScript promises- basics
+          </h1>
+          <p>Before we get anywhere on promises, paying some tribute to callbacks is necessary evil. Below code uses a native node module (<code>fs</code>) to read a file and write the content of that file to another destination. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="s2">&quot;bb&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="s2">&quot;bba&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;File written&quot;</span><span class="p">);</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;);</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;);</span></div></div></pre></div></figure>
+
+<p>If we think node as a human - we are saying to node, “Hey dude, copy file to destination and once you’re done, execute this function too”.  Callbacks are needed to execute logic after some other logic has been executed. This is the holly grail of asynchronous programming. </p>
+
+<p><img class="center" src="http://i.imgur.com/H5D9EWs.png" alt="Callback joke" >
+&lt;!&ndash; more &ndash;&gt;</p>
+
+<h2>Now promises</h2>
+
+<p>Callbacks are all nice before you get into a <a href="http://callbackhell.com/">callback hell</a>. There is a an example gist that shows exactly what a callback hell is! I know it’s subjective to state callbacks are evil. But if there is something better out there (such as promises) why not use the new technique.</p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>gistfile1.js</span><a class='code-highlight-caption-link' href='https://gist.github.com/8459026'>link</a></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">var</span> <span class="nx">doQuery</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">count</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">total</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sendError</span><span class="p">(</span><span class="s1">&#39;database error&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="nx">query</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">items</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sendError</span><span class="p">(</span><span class="s1">&#39;database error&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>          <span class="nx">sendResponse</span><span class="p">(&#x7b;</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="nx">total</span><span class="o">:</span> <span class="nx">total</span><span class="p">,</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="nx">items</span><span class="o">:</span> <span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>                   <span class="k">return</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="nx">name</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">getDocumentName</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="nx">i</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">,</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="nx">id</span><span class="o">:</span> <span class="nx">i</span><span class="p">.</span><span class="nx">id</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>                   <span class="p">&#x7d;;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="p">&#x7d;)</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="p">&#x7d;);</span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>     <span class="p">&#x7d;);</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'> <span class="p">&#x7d;);</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<h2>Promises -simple explanation</h2>
+
+<p>What is a promise? It’s an object that can be used to obtain the result of an async calls. Let’s see how this actually looks in code -</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileAsync</span><span class="p">(</span><span class="s2">&quot;bb&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileAsync</span><span class="p">(</span><span class="s2">&quot;bba&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="s2">&quot;bba&quot;</span><span class="p">;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;File &quot;</span><span class="o">+</span><span class="nx">name</span><span class="o">+</span><span class="s2">&quot; written&quot;</span><span class="p">);</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;)</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;unable to read file&quot;</span><span class="p">)</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;);</span></div></div></pre></div></figure>
+
+<p>It does look a little bit better right? Now we are chaining all the async function together with promises. When ever we return something from a promise -that return will be passed to the next promise as input. But there is a catch - If another promise is returned inside a promise - the promise chain includes the new promise to the chain. As you can see <code>fs.writeFileAsync</code> returns  a promise. But only after that promise is executed - our next promise runs.</p>
+
+<p>In case you were wondering from where <code>fs.readFileAsync</code> and <code> fs.writeFileAsync</code> - there is a nice library called <code><a href=“https://github.com/petkaantonov/bluebird”>bluebird</a></code> that can be used to promisify a promise unaware module. </p>
+
+<h2>The power of Promise passing</h2>
+
+<p>You might say that Promises are just syntactical sugar from the above example but it has way more power than that. Best part about a promise is that it’s an object. What is an object can be passed easily across modules. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileAsync</span><span class="p">(</span><span class="s2">&quot;bb&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileAsync</span><span class="p">(</span><span class="s2">&quot;bba&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="s2">&quot;bba&quot;</span><span class="p">;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;).</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="k">catch</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;unable to read file&quot;</span><span class="p">)</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;);</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c1">// in another layer</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;File &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; written&quot;</span><span class="p">);</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;);</span></div></div></pre></div></figure>
+
+<h2>Promise spec and implementations</h2>
+
+<p>Promises are not yet available natively in JavaScript. ECMA6 will change that soon but until then there are many libraries that support Promises. I personally use <code>bluebird</code> but there are many others. Many libraries also follow the <a href="https://promisesaplus.com/">Promise/A+</a> specification which provides interoperability for your code. There is also something new around the block called <a href="http://jlongster.com/2012/10/05/javascript-yield.html">generators</a>. </p>
+
+<p>I have made all the examples I brought up available as a <a href="https://gist.github.com/dulichan/3ce43ee115359e99663b">gist</a>.  Play around with the code to get a hang of it. I started actually using Promises because of <a href="http://thinky.io">Thinky</a> - an ORM client for RethinkDB. It’s an awesome ORM for RethinkDB, please check it out if you are using RethinkDB with Node. </p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 20:38</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

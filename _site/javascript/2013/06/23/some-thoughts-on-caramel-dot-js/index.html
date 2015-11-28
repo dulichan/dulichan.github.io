@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <meta content='Some thoughts on Caramel.js - Tinker's thoughts~' property='og:title' />
+    <title>Some thoughts on Caramel.js - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/javascript/2013/06/23/some-thoughts-on-caramel-dot-js/' property='og:url' />
+  <meta content="We have been using [jaggery](http://jaggeryjs.org) for most our internal work at WSO2 and I am integrating the [Caram..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/javascript/2013/06/05/simple-mvc-for-jaggeryjs/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/octopress/2013/07/21/rebuilding-octo-blog/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>23 Jun 2013</div>
+            Some thoughts on Caramel.js
+          </h1>
+          <p>We have been using <a href="http://jaggeryjs.org">jaggery</a> for most our internal work at WSO2 and I am integrating the <a href="https://github.com/wso2/caramel">Caramel MVC framework</a> for the WSO2Store and WSO2Publisher that will be coming out in the Enterprise Store.</p>
+
+<p>The Generic store is already built using Caramel so the only way to integrate our apps with the generic store is to go the Caramel way.</p>
+
+<p>I tried using Caramel and got bit confused as it was not directly adhearing to the MVC pattern that I was familiar with. </p>
+
+<h2>Absolute.js</h2>
+
+<p>Due to all of the confusions and regarding Caramel and it&rsquo;s complexity of building apps faster we thought of implementing a rather simple idea. I have already written about <a href="https://github.com/dulichan/absolute.js">absolute.js</a> in <a href="http://dulichan.github.io/chan/blog/2013/06/05/simple-mvc-for-jaggeryjs/">my blog before</a> as well. 
+&lt;!&ndash; more &ndash;&gt;
+After the review meeting we came to a conclusion to improve Caramel by decomposing it into pieces and implement different patterns.</p>
+
+<h2>Pros of Caramel</h2>
+
+<p>After going through the <a href="http://wso2.github.io/caramel/">blog samples</a> and understanding how Caramel works I found great features we can include to absolute.js without derailing from it&rsquo;s initial goal - &lsquo;MVC on steroids&rsquo;</p>
+
+<ul>
+<li>Asset pipeline</li>
+<li>Theme support</li>
+<li>Unified directory structure</li>
+<li>Controller is theme based</li>
+<li>Abstraction of Template engine</li>
+</ul>
+
+<h2>Middleman</h2>
+
+<p>Caramel framework introduces a middleman in between Controller and View called Renderer. The renderer is the component that is actually theme based. This looks like a good approach but it would be better if the renderers of pluggable nature where the renderer will only be executed if it exists. </p>
+
+<h2>Changes to Absolute.js</h2>
+
+<p>There are some changes we need to do for absolute.js as well. We will have to take out the controller-view matching approach and enable a pluggable nature to it.</p>
+
+<h2>Improving Caramel</h2>
+
+<p>Hard part of improving caramel is that it&rsquo;s already used in many projects. Changes to how it works may actually affect everything built based on it. So we will have to be careful in the improvements. If all comes to worse. We can keep the current verson of caramel for the products and build Caramel 3 with the improved concepts and features and later on migrate Caramel version in other products.</p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 22:32</span>
+</p>
+
+
+        </section>
+      </div>
+      
+
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

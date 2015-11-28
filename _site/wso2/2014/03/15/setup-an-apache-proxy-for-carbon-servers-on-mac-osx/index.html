@@ -1,0 +1,234 @@
+<html>
+  <head>
+    <meta content='Setup an Apache Proxy for Carbon Servers on Mac OS X - Tinker's thoughts~' property='og:title' />
+    <title>Setup an Apache Proxy for Carbon Servers on Mac OS X - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/wso2/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/' property='og:url' />
+  <meta content="Setting up an Apache server on reverse proxy is a very basic requirement for deployments. What I am going to explain ..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/javascript/2014/03/02/building-a-file-transfering-app-using-firebase-and-javascript/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/iot/2014/05/23/conference-for-internet-of-things-solidcon/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>15 Mar 2014</div>
+            Setup an Apache Proxy for Carbon Servers on Mac OS X
+          </h1>
+          <p>Setting up an Apache server on reverse proxy is a very basic requirement for deployments. What I am going to explain in this blog post is about setting up a reverse proxy for a WSO2 Carbon web server that is running on port 9763 (for HTTP) . In fact you can skip the carbon specific configurations if you want to set it up for another server. So let&rsquo;s get started.</p>
+
+<p>First you&rsquo;ll have to install apache server on your machine. This alone is one of the most complex steps as it is dependent on your platform (OS X, Windows, Linux). I am going to only show steps for OS X but Proxy Configuration is same for all operative systems. </p>
+
+<h2>Where is Apache?</h2>
+
+<p>You don&rsquo;t have to worry about installing apache cause OS X already has apache server inside of it. It&rsquo;s located under <code>/etc/apache2</code> directory (Optionally you can also install <a href="http://www.apachefriends.org/index.html">XAMPP</a> as well). </p>
+
+<p>To start the apache server -</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>sudo apachectl start</div></div></pre></div></figure>
+
+<!-- more -->
+
+<h2>Setup the Proxy Configs</h2>
+
+<p>Now the role of the reverse proxy is to send traffic coming out from the network to another host. </p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/6/67/Reverse_proxy_h2g2bob.svg" alt="Reverse Proxy"></p>
+
+<p>We can setup a proxy in apache to do this where <code>localhost:9763</code> will go to <code>localhost:80</code>. Port <code>80</code> is the default http port. For this blog post I will be focusing on setting up proxy over http. I am still looking into https proxy. I&rsquo;ll link that post here once I am done with it. </p>
+
+<p>There is a config file in apache located in <code>/etc/apache2/httpd.conf</code>. You have to include the below section in the bottom of that file.</p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>/etc/apache2/httpd.conf</span></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;IfModule mod_proxy.c&gt;
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c">#</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'> <span class="c"># Reverse Proxy</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c">#</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>ProxyRequests On
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;Proxy *&gt;
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>    Order deny,allow
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    Allow from all
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/Proxy&gt;
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>ProxyVia On
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>ProxyPass / http://localhost:9763/
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>ProxyPassReverse / http://localhost:9763/
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>ProxyPreserveHost On
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/IfModule&gt;</div></div></pre></div></figure>
+
+<p>Now restart apache -</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>sudo apachectl restart</div></div></pre></div></figure>
+
+<h2>Carbon configurations</h2>
+
+<p>To configure carbon for reverse proxy you have to change the file -<code>$SERVER_HOME/repository/conf/tomcat/catalina-server.xml</code>.  In the configuration file first <code>Connector</code> should be changed to below configuration. <code>proxyPort</code> attribute was added to the <code>Connector</code>.</p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>catalina-server.xml</span></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nt">&lt;Connector</span>  <span class="na">protocol=</span><span class="s">&quot;org.apache.coyote.http11.Http11NioProtocol&quot;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">port=</span><span class="s">&quot;9763&quot;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">redirectPort=</span><span class="s">&quot;9443&quot;</span> 
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">proxyPort=</span><span class="s">&quot;80&quot;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">bindOnInit=</span><span class="s">&quot;false&quot;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">maxHttpHeaderSize=</span><span class="s">&quot;8192&quot;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">acceptorThreadCount=</span><span class="s">&quot;2&quot;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">maxThreads=</span><span class="s">&quot;250&quot;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">minSpareThreads=</span><span class="s">&quot;50&quot;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">disableUploadTimeout=</span><span class="s">&quot;false&quot;</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">connectionUploadTimeout=</span><span class="s">&quot;120000&quot;</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">maxKeepAliveRequests=</span><span class="s">&quot;200&quot;</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">acceptCount=</span><span class="s">&quot;200&quot;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">server=</span><span class="s">&quot;WSO2 Carbon Server&quot;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">compression=</span><span class="s">&quot;on&quot;</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">compressionMinSize=</span><span class="s">&quot;2048&quot;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">noCompressionUserAgents=</span><span class="s">&quot;gozilla, traviata&quot;</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">compressableMimeType=</span><span class="s">&quot;text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg&quot;</span> 
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="na">URIEncoding=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">/&gt;</span></div></div></pre></div></figure>
+
+<p>The apache server will proxy traffic coming through port <code>80</code> to port <code>9763</code>. </p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 00:00</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

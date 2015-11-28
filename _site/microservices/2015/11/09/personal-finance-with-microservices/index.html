@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta content='Personal Finance with Microservices - Tinker's thoughts~' property='og:title' />
+    <title>Personal Finance with Microservices - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/microservices/2015/11/09/personal-finance-with-microservices/' property='og:url' />
+  <meta content="Personal finance is an interesting topic. Everyone has their own ideal ways of managing personal finances. Being too ..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/wso2/2015/10/21/cors-header-support-for-wso2-as-with-apache-proxy/">
+        ‹
+      </a>
+    </div>
+  
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>09 Nov 2015</div>
+            Personal Finance with Microservices
+          </h1>
+          <p>Personal finance is an interesting topic. Everyone has their own ideal ways of managing personal finances. Being too lazy to enter CSV file to a Numbers sheet, I went ahead and wrote a micro service to hook up expenses into a Google sheet. </p>
+
+<p>First off, there are applications to manage personal finances that are based on popular methods. For example,  My friend <a href="https://medium.com/@yudhanjaya">Yuda</a> uses an app called <a href="https://www.waveapps.com/">Wave</a> to manage personal finances. </p>
+
+<p>I am not a big fan of these application due to below reasons -</p>
+
+<ul>
+<li>Not accessible enough </li>
+<li>Budgets - Arrrrr, I hate budgets.</li>
+<li>Unnecessary analytics (how much money spent against earned! I don’t want to know how broke I am with a chart)</li>
+<li>Currency conversion (since I end up traveling, I need multiple currency support)</li>
+<li>Crappy UI (biggest turn off)</li>
+</ul>
+
+<p><em>I know that I am ranting a bit but it’s personal finance</em>
+&lt;!&ndash; more &ndash;&gt;
+Then I met <a href="http://dailycost.com/">Daily Costs</a>, an iPhone app that can be used to note costs easily. Beer , 320, Coffee 250 got it. It was all easier to collect the expenses now. Better yet, I could export all that data into a CSV file. </p>
+
+<p>What I was missing now was some analytics on this data. I earlier had a Numbers (an Excel like program for Mac) sheet that did a decent job. Numbers was limited to the local machine and I had to manually enter the data from the CSV to the sheet. This was often messy and I forget to do this all the time. </p>
+
+<p>Since I was looking into Micro services, I thought of building a small service to act on this event and write the CSV generated to a Google Sheet. Sounds simple. I looked back into my usually process of how I would normally handle this scenario. </p>
+
+<p><img class="center" src="https://docs.google.com/drawings/d/1L5XYnERMBk3lPYhJNinME8Ul-mKNINVaEf7SzxnTT80/pub?w=554&h=282" alt="Diagram of the process flow of usual personal finance session" > </p>
+
+<p>Sending an email out every weekend from the app was easy. Only require a simple reminder. Catching this email received event was the important part. Then I remembered that there is a cool service called IFFT that can be used for this connection. </p>
+
+<p>By using IFFT Gmail recipe, I listened to a new email event to my google account with a particular subject. The trigger for this was to call a web endpoint. Now what I need was something to write my service on. Something ideally easy to use, free (or low cost), and no management. There is a micro service platform called <a href="http://bit.ly/20w3FF7">Hook.io</a>. Hook.io allows me to run a piece of JavaScript code in the cloud with a simple web trigger. Just like the trigger provided by IFFT. </p>
+
+<p>A nice feature of Hook.io was that it allowed me to use all the modules (plugins) and other tools of Node (the JavaScript web runtime). </p>
+
+<p>I had the sketch of the code in my mind  - first I needed to get the CSV file. IFFT can make the request to the web endpoint with a file url of the attachment. Then I downloaded the CSV file from this link. </p>
+
+<p><img class="center" src="https://docs.google.com/drawings/d/1LfOX-8qBHotHXFCYYaiIYBFSQgGvQZLhlgRUdWD-fzo/pub?w=551&h=275" alt="Show the IFFT trigger out picture" > </p>
+
+<p>Next was to convert the CSV to an array structure using the csv-parse module. This would allow me to write the whole CSV to a history transaction sheet on the Google Sheet. Next - I iterated and found the transactions for the current month and inserted them to a separate sheet. </p>
+
+<p>With the help of the nifty little module (google-sheet-npm), I can read the Google Sheet and write. The only problem I had was authenticating into the Google Sheet. I didn’t want to use oAuth, the default mechanism provided to authenticate and authorize 3rd party resources in the web. </p>
+
+<p>Google has an alternative called machine authentication. Google gives you a file based (JSON) token that can be used for authenticating which is associated with a newly generated google account. You need to authorize the google sheet for that google account.  </p>
+
+<p><img class="center" src="http://i.imgur.com/A8xLYjU.png"  > </p>
+
+<p>And behold the code:-
+<figure class='code-highlight-figure code-block-tinker'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>finance.js</span><a class='code-highlight-caption-link' href='https://gist.github.com/dulichan/64e672354a7136a1df4b'>gist</a></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">module</span><span class="p">[</span><span class="s1">&#39;exports&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">echoHttp</span> <span class="p">(</span><span class="nx">hook</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="nx">hook</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span> <span class="c1">// This gives all the JSON body parameters in an object.</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="c1">//Using a small security measure ;)</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">if</span><span class="p">(</span><span class="nx">body</span><span class="p">.</span><span class="nx">secret</span> <span class="o">!=</span> <span class="s2">&quot;dgfdg45345jf0248234234&quot;</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nx">hook</span><span class="p">.</span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s2">&quot;Unauthorized&quot;</span><span class="p">);</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">return</span><span class="p">;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="kd">var</span> <span class="nx">https</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;https&#39;</span><span class="p">),</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="nx">parse</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;csv-parse&#39;</span><span class="p">),</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">),</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nx">GoogleSpreadsheet</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;google-spreadsheet&quot;</span><span class="p">);</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'> <span class="kd">var</span> <span class="nx">TRANSACTION<em>SHEET</em>ID</span> <span class="o">=</span> <span class="s2">&quot;6665&quot;</span><span class="p">;</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">var</span> <span class="nx">HISTORY<em>SHEET</em>ID</span> <span class="o">=</span> <span class="s2">&quot;dfgdfg7&quot;</span><span class="p">;</span> 
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'> <span class="c1">// spreadsheet key is the long id in the sheets URL </span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">var</span> <span class="nx">my<em>sheet</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GoogleSpreadsheet</span><span class="p">(</span><span class="s1">&#39;uwoiruweoiruwoierwer-og&#39;</span><span class="p">);</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'> <span class="c1">// The JSON credential token obtained from Google - https://developers.google.com/drive/web/auth/web-server</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">var</span> <span class="nx">creds</span> <span class="o">=</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="p">&#x7d;;</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="cm">/*</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">      Download the file from location and invoke the call back</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">  */</span>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">var</span> <span class="nx">getFile</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">location</span> <span class="p">,</span> <span class="nx">callback</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="nx">https</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">location</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="c1">// Continuously update stream with data</span>
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="nx">response</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="nx">body</span> <span class="o">+=</span> <span class="nx">d</span><span class="p">;</span>
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="p">&#x7d;);</span>
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="nx">response</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="nx">callback</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+</div></div><div data-line='36' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="p">&#x7d;);</span>
+</div></div><div data-line='37' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="p">&#x7d;);</span>
+</div></div><div data-line='38' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="p">&#x7d;;</span>
+</div></div><div data-line='39' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='40' class='code-highlight-row numbered'><div class='code-highlight-line'>     <span class="k">try</span><span class="p">&#x7b;</span>
+</div></div><div data-line='41' class='code-highlight-row numbered'><div class='code-highlight-line'>           <span class="nx">getFile</span><span class="p">(</span><span class="nx">body</span><span class="p">.</span><span class="nx">attachmentURL</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='42' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="c1">// Parsing the downloaded data into CSV</span>
+</div></div><div data-line='43' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="p">&#x7b;</span><span class="nx">comment</span><span class="o">:</span> <span class="s1">&#39;#&#39;</span><span class="p">&#x7d;,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">output</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='44' class='code-highlight-row numbered'><div class='code-highlight-line'>                   <span class="c1">// Output is an array</span>
+</div></div><div data-line='45' class='code-highlight-row numbered'><div class='code-highlight-line'>                   <span class="nx">my</em>sheet</span><span class="p">.</span><span class="nx">useServiceAccountAuth</span><span class="p">(</span><span class="nx">creds</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='46' class='code-highlight-row numbered'><div class='code-highlight-line'>                     <span class="c1">// Use this to find the id of the sheet</span>
+</div></div><div data-line='47' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="nx">my<em>sheet</span><span class="p">.</span><span class="nx">getInfo</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">sheet</em>info</span> <span class="p">)&#x7b;</span>
+</div></div><div data-line='48' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">sheet<em>info</span><span class="p">.</span><span class="nx">title</span> <span class="o">+</span> <span class="s1">&#39; is loaded&#39;</span> <span class="p">);</span>
+</div></div><div data-line='49' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="kd">var</span> <span class="nx">sheet1</span> <span class="o">=</span> <span class="nx">sheet</em>info</span><span class="p">.</span><span class="nx">worksheets</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</div></div><div data-line='50' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="c1">// log the sheet to get the id</span>
+</div></div><div data-line='51' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sheet1</span><span class="p">);</span>
+</div></div><div data-line='52' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="p">&#x7d;);</span>
+</div></div><div data-line='53' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="kd">var</span> <span class="nx">currentMonth</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getMonth</span><span class="p">();</span>
+</div></div><div data-line='54' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="cm">/<em></span>
+</div></div><div data-line='55' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                          Insert current months records to the sheet and everything to history</span>
+</div></div><div data-line='56' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                          sheet</span>
+</div></div><div data-line='57' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                      */</span>
+</div></div><div data-line='58' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="kd">var</span> <span class="nx">insertRows</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">output</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='59' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">output</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">&#x7b;</span> 
+</div></div><div data-line='60' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="kd">var</span> <span class="nx">record</span> <span class="o">=</span> <span class="nx">output</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+</div></div><div data-line='61' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</div></div><div data-line='62' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="kd">var</span> <span class="nx">dataObj</span> <span class="o">=</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='63' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">date</span> <span class="o">:</span> <span class="nx">record</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+</div></div><div data-line='64' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">category</span><span class="o">:</span> <span class="nx">record</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+</div></div><div data-line='65' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">amount</span><span class="o">:</span> <span class="nx">record</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+</div></div><div data-line='66' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">currency</span><span class="o">:</span> <span class="nx">record</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+</div></div><div data-line='67' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">description</span> <span class="o">:</span> <span class="nx">record</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+</div></div><div data-line='68' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="p">&#x7d;;</span>
+</div></div><div data-line='69' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="c1">// Check for current month</span>
+</div></div><div data-line='70' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="k">if</span> <span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">getMonth</span><span class="p">()</span> <span class="o">==</span> <span class="nx">currentMonth</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='71' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">my<em>sheet</span><span class="p">.</span><span class="nx">addRow</span><span class="p">(</span> <span class="nx">TRANSACTION</em>SHEET<em>ID</span><span class="p">,</span> <span class="nx">dataObj</span> <span class="p">);</span>
+</div></div><div data-line='72' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="p">&#x7d;</span>
+</div></div><div data-line='73' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="nx">my</em>sheet</span><span class="p">.</span><span class="nx">addRow</span><span class="p">(</span><span class="nx">HISTORY<em>SHEET</em>ID</span><span class="p">,</span> <span class="nx">dataObj</span><span class="p">);</span>
+</div></div><div data-line='74' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="p">&#x7d;</span>
+</div></div><div data-line='75' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="c1">//hook.res.end(&quot;Success&quot;);</span>
+</div></div><div data-line='76' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="p">&#x7d;</span>
+</div></div><div data-line='77' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="cm">/</em></span>
+</div></div><div data-line='78' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                          Delete all rows of the current month on the sheet. This is because</span>
+</div></div><div data-line='79' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                          there is no id for the record.</span>
+</div></div><div data-line='80' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                      <em>/</span>
+</div></div><div data-line='81' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="kd">var</span> <span class="nx">deleteRows</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">row<em>data</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='82' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">row</em>data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='83' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="k">if</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">row<em>data</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">date</span><span class="p">).</span><span class="nx">getMonth</span><span class="p">()</span> <span class="o">==</span> <span class="nx">currentMonth</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='84' class='code-highlight-row numbered'><div class='code-highlight-line'>                                   <span class="nx">row</em>data</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">del</span><span class="p">();</span>
+</div></div><div data-line='85' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="p">&#x7d;</span>
+</div></div><div data-line='86' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="p">&#x7d;</span>
+</div></div><div data-line='87' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="p">&#x7d;</span>
+</div></div><div data-line='88' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="cm">/</em></span>
+</div></div><div data-line='89' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                          Read the transaction sheet</span>
+</div></div><div data-line='90' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="cm">                      */</span>
+</div></div><div data-line='91' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="nx">my<em>sheet</span><span class="p">.</span><span class="nx">getRows</span><span class="p">(</span> <span class="nx">TRANSACTION</em>SHEET<em>ID</span><span class="p">,</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='92' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">start</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>          <span class="c1">// start index </span>
+</div></div><div data-line='93' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">num</span><span class="o">:</span> <span class="mi">500</span><span class="p">,</span>              <span class="c1">// number of rows to pull </span>
+</div></div><div data-line='94' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">orderby</span><span class="o">:</span> <span class="s1">&#39;date&#39;</span>  <span class="c1">// column to order results by </span>
+</div></div><div data-line='95' class='code-highlight-row numbered'><div class='code-highlight-line'>                       <span class="p">&#x7d;,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">row</em>data</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='96' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">deleteRows</span><span class="p">(</span><span class="nx">row<em>data</span><span class="p">);</span>
+</div></div><div data-line='97' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="c1">//Backup the transactions in the history sheet</span>
+</div></div><div data-line='98' class='code-highlight-row numbered'><div class='code-highlight-line'>                           <span class="nx">my</em>sheet</span><span class="p">.</span><span class="nx">getRows</span><span class="p">(</span> <span class="nx">HISTORY<em>SHEET</em>ID</span><span class="p">,</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='99' class='code-highlight-row numbered'><div class='code-highlight-line'>                               <span class="nx">start</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>          <span class="c1">// start index </span>
+</div></div><div data-line='100' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="nx">num</span><span class="o">:</span> <span class="mi">2000</span><span class="p">,</span>              <span class="c1">// number of rows to pull </span>
+</div></div><div data-line='101' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="nx">orderby</span><span class="o">:</span> <span class="s1">&#39;date&#39;</span>  <span class="c1">// column to order results by </span>
+</div></div><div data-line='102' class='code-highlight-row numbered'><div class='code-highlight-line'>                          <span class="p">&#x7d;,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">row<em>data</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='103' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="c1">// delete everything before</span>
+</div></div><div data-line='104' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">row</em>data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='105' class='code-highlight-row numbered'><div class='code-highlight-line'>                                  <span class="nx">row_data</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">del</span><span class="p">();</span>
+</div></div><div data-line='106' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="p">&#x7d;</span>
+</div></div><div data-line='107' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="nx">call</span> <span class="nx">the</span> <span class="kd">function</span> <span class="nx">to</span> <span class="nx">insert</span> <span class="nx">history</span> <span class="nx">and</span> <span class="nx">transaction</span> <span class="nx">rows</span>
+</div></div><div data-line='108' class='code-highlight-row numbered'><div class='code-highlight-line'>                              <span class="nx">insertRows</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span>
+</div></div><div data-line='109' class='code-highlight-row numbered'><div class='code-highlight-line'>                          <span class="p">&#x7d;);</span>
+</div></div><div data-line='110' class='code-highlight-row numbered'><div class='code-highlight-line'>                      <span class="p">&#x7d;);</span>
+</div></div><div data-line='111' class='code-highlight-row numbered'><div class='code-highlight-line'>                  <span class="p">&#x7d;);</span>
+</div></div><div data-line='112' class='code-highlight-row numbered'><div class='code-highlight-line'>          <span class="p">&#x7d;);</span>
+</div></div><div data-line='113' class='code-highlight-row numbered'><div class='code-highlight-line'>      <span class="p">&#x7d;);</span> 
+</div></div><div data-line='114' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="p">&#x7d;</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)&#x7b;</span>
+</div></div><div data-line='115' class='code-highlight-row numbered'><div class='code-highlight-line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+</div></div><div data-line='116' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="p">&#x7d;</span>
+</div></div><div data-line='117' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;;</span>
+</div></div><div data-line='118' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c1">// Running locally using Node.</span>
+</div></div><div data-line='119' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">module</span><span class="p"><a href="&amp;#x7b;%3C/span%3E%3Cspan%20class=%22nx%22%3Eparams%3C/span%3E%3Cspan%20class=%22o%22%3E:%3C/span%3E%20%3Cspan%20class=%22p%22%3E&amp;#x7b;%3C/span%3E%3Cspan%20class=%22nx%22%3Esecret%3C/span%3E%3Cspan%20class=%22o%22%3E:%3C/span%3E%20%3Cspan%20class=%22s2%22%3E&amp;quot;dgfdg45345jf0248234234&amp;quot;%3C/span%3E%20%3Cspan%20class=%22p%22%3E,%3C/span%3E%3Cspan%20class=%22nx%22%3EattachmentURL%3C/span%3E%3Cspan%20class=%22o%22%3E:%3C/span%3E%3Cspan%20class=%22s2%22%3E&amp;quot;CSV%20URL&amp;quot;%3C/span%3E%3Cspan%20class=%22p%22%3E&amp;#x7d;&amp;#x7d;"></span><span class="s1">&#39;exports&#39;</span><span class="p"></a>;</span></div></div></pre></div></figure></p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 05:20</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

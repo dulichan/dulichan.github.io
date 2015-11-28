@@ -1,0 +1,321 @@
+<html>
+  <head>
+    <meta content='Calling UserStore related service in WSO2 Carbon using WS-Client - Tinker's thoughts~' property='og:title' />
+    <title>Calling UserStore related service in WSO2 Carbon using WS-Client - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/wso2/2014/12/08/calling-userstore-related-service-in-wso2-carbon-using-ws-client/' property='og:url' />
+  <meta content="WSO2 Carbon Servers expose all functionalities as Web-Services. In fact the WSO2 Management console is one such web a..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/javascript/2014/10/08/javascript-promises-basics/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/wso2/2015/09/16/return-404-by-default-in-wso2-esb/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>08 Dec 2014</div>
+            Calling UserStore related service in WSO2 Carbon using WS-Client
+          </h1>
+          <p>WSO2 Carbon Servers expose all functionalities as Web-Services. In fact the WSO2 Management console is one such web app that utilize the Web services to build a comprehensive management console. Such services are called as Admin Services. </p>
+
+<p>We are going to use the API to list the users of a provided role using a Java based web-service client (WS-Client). WSO2 has a set of <a href="https://svn.wso2.org/repos/wso2/carbon/platform/trunk/service-stubs/">service stubs</a> released that can be used get this done. </p>
+
+<p>The other option is to use the WSDL (Web Service Descriptor) to generate the stubs. WSDLs of the Admin Services are hidden by default. To enable them - change the flag in the carbon.xml - <code>&lt;HideAdminServiceWSDLs&gt;false&lt;/HideAdminServiceWSDLs&gt;</code></p>
+
+<p>After that you can view the Admin Services deployed on the server by starting the server on OSGi mode. To start with OSGi mode run - <code>sh bin/wso2server.sh -DosgiConsole</code>. Once the server finished booting up you can execute - <code>listAdminServices</code>.
+&lt;!&ndash; more &ndash;&gt;</p>
+
+<h2>Creating the Maven Project</h2>
+
+<p>Next thing we want to do is to create the maven project which has all the necessary dependencies. Below section needs to be added to the pom.xml file. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nt">&lt;repositories&gt;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;repository&gt;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;id&gt;</span>wso2-nexus<span class="nt">&lt;/id&gt;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;name&gt;</span>WSO2 internal Repository<span class="nt">&lt;/name&gt;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;url&gt;</span>http://maven.wso2.org/nexus/content/groups/wso2-public/<span class="nt">&lt;/url&gt;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;releases&gt;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&lt;updatePolicy&gt;</span>daily<span class="nt">&lt;/updatePolicy&gt;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&lt;checksumPolicy&gt;</span>fail<span class="nt">&lt;/checksumPolicy&gt;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;/releases&gt;</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;/repository&gt;</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&lt;/repositories&gt;</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&lt;dependencies&gt;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;dependency&gt;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;groupId&gt;</span>org.wso2.carbon<span class="nt">&lt;/groupId&gt;</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;artifactId&gt;</span>org.wso2.carbon.authenticator.stub<span class="nt">&lt;/artifactId&gt;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;version&gt;</span>4.2.0<span class="nt">&lt;/version&gt;</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;/dependency&gt;</span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;dependency&gt;</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;groupId&gt;</span>org.wso2.carbon<span class="nt">&lt;/groupId&gt;</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;artifactId&gt;</span>org.wso2.carbon.um.ws.api.stub<span class="nt">&lt;/artifactId&gt;</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;version&gt;</span>4.2.0<span class="nt">&lt;/version&gt;</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;/dependency&gt;</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;dependency&gt;</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;groupId&gt;</span>org.wso2.carbon<span class="nt">&lt;/groupId&gt;</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;artifactId&gt;</span>org.wso2.carbon.user.mgt.stub<span class="nt">&lt;/artifactId&gt;</span>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;version&gt;</span>4.2.0<span class="nt">&lt;/version&gt;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;/dependency&gt;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;dependency&gt;</span>
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;groupId&gt;</span>org.apache.axis2.wso2<span class="nt">&lt;/groupId&gt;</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;artifactId&gt;</span>axis2-client<span class="nt">&lt;/artifactId&gt;</span>
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&lt;version&gt;</span>1.6.1.wso2v5<span class="nt">&lt;/version&gt;</span>
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&lt;/dependency&gt;</span>
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&lt;/dependencies&gt;</span></div></div></pre></div></figure>
+
+<p>Admin Services are protected with Basic Authentication. To call the UserStore related Services - I first need an authorized cookie. I am going to call the Authentication Endpoint to obtain the authorized cookie. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoginAdminServiceClient</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">serviceName</span> <span class="o">=</span> <span class="s">&quot;AuthenticationAdmin&quot;</span><span class="o">;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="n">AuthenticationAdminStub</span> <span class="n">authenticationAdminStub</span><span class="o">;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">endPoint</span><span class="o">;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">public</span> <span class="nf">LoginAdminServiceClient</span><span class="o">(</span><span class="n">String</span> <span class="n">backEndUrl</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">AxisFault</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">this</span><span class="o">.</span><span class="na">endPoint</span> <span class="o">=</span> <span class="n">backEndUrl</span> <span class="o">+</span> <span class="s">&quot;/services/&quot;</span> <span class="o">+</span> <span class="n">serviceName</span><span class="o">;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">authenticationAdminStub</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AuthenticationAdminStub</span><span class="o">(</span><span class="n">endPoint</span><span class="o">);</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="o">&#x7d;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">String</span> <span class="n">userName</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">,</span> <span class="n">LoginAuthenticationExceptionException</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">String</span> <span class="n">sessionCookie</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">if</span> <span class="o">(</span><span class="n">authenticationAdminStub</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="n">userName</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">))</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Login Successful&quot;</span><span class="o">);</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">ServiceContext</span> <span class="n">serviceContext</span> <span class="o">=</span> <span class="n">authenticationAdminStub</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="o">.</span><span class="na">_getServiceClient</span><span class="o">().</span><span class="na">getLastOperationContext</span><span class="o">()</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="o">.</span><span class="na">getServiceContext</span><span class="o">();</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">sessionCookie</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">serviceContext</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="n">HTTPConstants</span><span class="o">.</span><span class="na">COOKIE_STRING</span><span class="o">);</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="o">&#x7d;</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">return</span> <span class="n">sessionCookie</span><span class="o">;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="o">&#x7d;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">logOut</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">,</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">LogoutAuthenticationExceptionException</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">authenticationAdminStub</span><span class="o">.</span><span class="na">logout</span><span class="o">();</span>
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="o">&#x7d;</span>
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="o">&#x7d;</span></div></div></pre></div></figure>
+
+<p>When we call the <code>authenticate()</code> method with user credentials - we get a return of the authenticated cookie. Next I am going to call the service method that returns me all the user that belongs to a role. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ServiceAdminClient</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="n">UserAdminStub</span> <span class="n">userAdminStub</span><span class="o">;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="n">RemoteUserStoreManagerServiceStub</span> <span class="n">remoteUMStub</span><span class="o">;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">public</span> <span class="nf">ServiceAdminClient</span><span class="o">(</span><span class="n">String</span> <span class="n">backEndUrl</span><span class="o">,</span> <span class="n">String</span> <span class="n">sessionCookie</span><span class="o">)</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="kd">throws</span> <span class="n">AxisFault</span> <span class="o">&#x7b;</span> 
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">String</span> <span class="n">userAdminEndpoint</span> <span class="o">=</span> <span class="n">createUserAdminEndpoint</span><span class="o">(</span><span class="n">backEndUrl</span><span class="o">);</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">String</span> <span class="n">remoteUserStoreEndpoint</span> <span class="o">=</span> <span class="n">createRemoteUserStoreEndpoint</span><span class="o">(</span><span class="n">backEndUrl</span><span class="o">);</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>      <span class="n">userAdminStub</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">UserAdminStub</span><span class="o">(</span><span class="n">userAdminEndpoint</span><span class="o">);</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">remoteUMStub</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">RemoteUserStoreManagerServiceStub</span><span class="o">(</span><span class="n">remoteUserStoreEndpoint</span><span class="o">);</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="c1">// Authenticate Your stub from sessionCookie</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">createUserAdminClient</span><span class="o">(</span><span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">createRemoteUserStoreClient</span><span class="o">(</span><span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createClient</span><span class="o">(</span><span class="n">ServiceClient</span> <span class="n">serviceClient</span><span class="o">,</span> <span class="n">String</span> <span class="n">sessionCookie</span><span class="o">)&#x7b;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">Options</span> <span class="n">option</span><span class="o">;</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">option</span> <span class="o">=</span> <span class="n">serviceClient</span><span class="o">.</span><span class="na">getOptions</span><span class="o">();</span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">option</span><span class="o">.</span><span class="na">setManageSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">option</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">axis2</span><span class="o">.</span><span class="na">transport</span><span class="o">.</span><span class="na">http</span><span class="o">.</span><span class="na">HTTPConstants</span><span class="o">.</span><span class="na">COOKIE_STRING</span><span class="o">,</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>               <span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createUserAdminClient</span><span class="o">(</span><span class="n">String</span> <span class="n">sessionCookie</span><span class="o">)</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">ServiceClient</span> <span class="n">serviceClient</span> <span class="o">=</span> <span class="n">userAdminStub</span><span class="o">.</span><span class="na">_getServiceClient</span><span class="o">();</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">createClient</span><span class="o">(</span><span class="n">serviceClient</span><span class="o">,</span> <span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createRemoteUserStoreClient</span><span class="o">(</span><span class="n">String</span> <span class="n">sessionCookie</span><span class="o">)</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">ServiceClient</span> <span class="n">serviceClient</span> <span class="o">=</span> <span class="n">remoteUMStub</span><span class="o">.</span><span class="na">_getServiceClient</span><span class="o">();</span>
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="n">createClient</span><span class="o">(</span><span class="n">serviceClient</span><span class="o">,</span> <span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">private</span> <span class="n">String</span> <span class="nf">createUserAdminEndpoint</span><span class="o">(</span><span class="n">String</span> <span class="n">backEndUrl</span><span class="o">)</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="k">return</span> <span class="n">backEndUrl</span> <span class="o">+</span> <span class="s">&quot;/services/&quot;</span> <span class="o">+</span> <span class="s">&quot;UserAdmin&quot;</span><span class="o">;</span>
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="kd">private</span> <span class="n">String</span> <span class="nf">createRemoteUserStoreEndpoint</span><span class="o">(</span><span class="n">String</span> <span class="n">backEndUrl</span><span class="o">)</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='36' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="k">return</span> <span class="n">backEndUrl</span> <span class="o">+</span> <span class="s">&quot;/services/&quot;</span> <span class="o">+</span> <span class="s">&quot;RemoteUserStoreManagerService&quot;</span><span class="o">;</span>
+</div></div><div data-line='37' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='38' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='39' class='code-highlight-row numbered'><div class='code-highlight-line'> <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getUsersOfRole</span><span class="o">(</span><span class="n">String</span> <span class="n">role</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">,</span> <span class="n">RemoteUserStoreManagerServiceUserStoreExceptionException</span><span class="o">&#x7b;</span>
+</div></div><div data-line='40' class='code-highlight-row numbered'><div class='code-highlight-line'>       <span class="k">return</span> <span class="n">remoteUMStub</span><span class="o">.</span><span class="na">getUserListOfRole</span><span class="o">(</span><span class="n">role</span><span class="o">);</span>
+</div></div><div data-line='41' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="o">&#x7d;</span>
+</div></div><div data-line='42' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="o">&#x7d;</span></div></div></pre></div></figure>
+
+<p>In the above class - we have created a method called <code>getUsersOfRole()</code> which calls an existing method in the stub. </p>
+
+<p>Below is a code block that utilize the above created <code>ServiceAdminClient</code> class to print the list of users for a role.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoginAdminServiceClient</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">serviceName</span> <span class="o">=</span> <span class="s">&quot;AuthenticationAdmin&quot;</span><span class="o">;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="n">AuthenticationAdminStub</span> <span class="n">authenticationAdminStub</span><span class="o">;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">endPoint</span><span class="o">;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">public</span> <span class="nf">LoginAdminServiceClient</span><span class="o">(</span><span class="n">String</span> <span class="n">backEndUrl</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">AxisFault</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">this</span><span class="o">.</span><span class="na">endPoint</span> <span class="o">=</span> <span class="n">backEndUrl</span> <span class="o">+</span> <span class="s">&quot;/services/&quot;</span> <span class="o">+</span> <span class="n">serviceName</span><span class="o">;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">authenticationAdminStub</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AuthenticationAdminStub</span><span class="o">(</span><span class="n">endPoint</span><span class="o">);</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="o">&#x7d;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">String</span> <span class="n">userName</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">,</span> <span class="n">LoginAuthenticationExceptionException</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">String</span> <span class="n">sessionCookie</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">if</span> <span class="o">(</span><span class="n">authenticationAdminStub</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="n">userName</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="s">&quot;localhost&quot;</span><span class="o">))</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Login Successful&quot;</span><span class="o">);</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">ServiceContext</span> <span class="n">serviceContext</span> <span class="o">=</span> <span class="n">authenticationAdminStub</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="o">.</span><span class="na">_getServiceClient</span><span class="o">().</span><span class="na">getLastOperationContext</span><span class="o">()</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="o">.</span><span class="na">getServiceContext</span><span class="o">();</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">sessionCookie</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">serviceContext</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="n">HTTPConstants</span><span class="o">.</span><span class="na">COOKIE_STRING</span><span class="o">);</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sessionCookie</span><span class="o">);</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="o">&#x7d;</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="k">return</span> <span class="n">sessionCookie</span><span class="o">;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="o">&#x7d;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">logOut</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">,</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="n">LogoutAuthenticationExceptionException</span> <span class="o">&#x7b;</span>
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="n">authenticationAdminStub</span><span class="o">.</span><span class="na">logout</span><span class="o">();</span>
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="o">&#x7d;</span>
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="o">&#x7d;</span></div></div></pre></div></figure>
+
+<h2>Conclusion</h2>
+
+<p><code>org.wso2.carbon.um.ws.api.stub</code> is one such stub that can be perform operations available in WSO2 Components. A custom app can be used to build and register users using the services available.</p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 23:45</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

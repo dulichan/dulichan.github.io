@@ -1,0 +1,313 @@
+<html>
+  <head>
+    <meta content='Building a file transfering app using Firebase and Javascript - Tinker's thoughts~' property='og:title' />
+    <title>Building a file transfering app using Firebase and Javascript - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/javascript/2014/03/02/building-a-file-transfering-app-using-firebase-and-javascript/' property='og:url' />
+  <meta content="This is not an intro post about [Firebase](https://www.firebase.com/) so I hope that you are familiar with Firebase o..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/ruby/2014/02/28/running-shoes-apps-in-mac-os-x/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/wso2/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>02 Mar 2014</div>
+            Building a file transfering app using Firebase and Javascript
+          </h1>
+          <p>This is not an intro post about <a href="https://www.firebase.com/">Firebase</a> so I hope that you are familiar with Firebase operations and how Firebase generally works.</p>
+
+<h3>Our problem domain</h3>
+
+<p>Our problem at hand was to send a file from one user to another user. More clearly stating - send data from user 1 to user 2 without having a custom backend server.</p>
+
+<p><img src="https://docs.google.com/drawings/d/1eOc7nuYHy6KKd3SWsBOVNeZWTd647AmxtIh2qJxaJMk/pub?w=535&amp;h=254" alt="User A wants to send file to User B"> </p>
+
+<h3>Proposed solution</h3>
+
+<p>Proposed solution is to build a handshake mechanism on Firebase without using a custom backend. Below is the architecture diagram of the solution.</p>
+
+<p><img src="https://docs.google.com/drawings/d/1YemIAX8gWbeCW8_cn_nRf4kaGzgGJgxZZTlU1btzFt8/pub?w=806&amp;h=477" alt="FileBus architecture"> </p>
+
+<!-- more -->
+
+<h4>Flow of requests</h4>
+
+<p><em>Request A</em> :- The client 1 will add a request to Firebase stating that a file is there to be shared to client 2. In Firebase how this is represented is by having a notification collection per user. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;$userid&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$notificationId1&quot;</span><span class="p">:</span> <span class="p">&#x7b;&#x7d;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+ 
+
+<p>An interesting point to note on Firebase is that we don&rsquo;t have arrays- <a href="http://stackoverflow.com/a/15306616/813471">Arrays are reflected with id&rsquo;s</a>. </p>
+
+<p>The key point here is that Client 1 is writing this to Client 2&rsquo;s notification list. Client 1 has write permission to Client 2 &rsquo;s notification collection but doesn&rsquo;t have read permission. Client 1 setup the values of <code>file_accepted</code>, <code>file_ready</code> as <code>false</code> by default and <code>file_require</code> as <code>true</code>.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;client_2&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$notificationId1&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_type&quot;</span><span class="p">:</span> <span class="s2">&quot;txt&quot;</span><span class="p">,</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_require&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;client_1&quot;</span><span class="p">,</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_accepted&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_ready&quot;</span><span class="p">:</span> <span class="kc">false</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="p">&#x7d;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p><em>Request B</em> :- Client 2 is listening to his notification collection on child<em>added and child</em>changed <a href="https://www.firebase.com/docs/reading-data.html">events</a>. Child Added will be fired since Client 1 has added a notification to Client B&rsquo;s collection.</p>
+
+<p><em>Request C</em> :- Client 2 will write a notification to Client 1&rsquo;s notification collection with the same notification changing the <code>file_accepted</code> to <code>true</code>, <code>user</code> to <code>client_2</code> and <code>recipient_notification</code> with notification id of the initial notification.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;client_2&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$notificationId1&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_type&quot;</span><span class="p">:</span> <span class="s2">&quot;txt&quot;</span><span class="p">,</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_require&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;client_1&quot;</span><span class="p">,</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_accepted&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_ready&quot;</span><span class="p">:</span> <span class="kc">false</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="p">&#x7d;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;,</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;client_1&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$notificationId2&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_type&quot;</span><span class="p">:</span> <span class="s2">&quot;txt&quot;</span><span class="p">,</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_require&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;client_2&quot;</span><span class="p">,</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_accepted&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_ready&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>                                       <span class="nt">&quot;recipient_notification&quot;</span><span class="p">:</span><span class="s2">&quot;notificationId1&quot;</span>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="p">&#x7d;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;</span>
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p><em>Request D</em> :- Client 1 is also listening to child<em>added and child</em>changed events on his notification collection. A child_added event will be triggered and client A will upload the file to files collection of client 1. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;client_1&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;,</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;files&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$file_name&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;$content&quot;</span><span class="p">,</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;size&quot;</span><span class="p">:</span> <span class="s2">&quot;$size&quot;</span><span class="p">,</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;$mimeType&quot;</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="p">&#x7d;</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p><em>Request E</em> :- Client 1 will select client 2&rsquo;s notification by using <code>recipient_notification</code> and change the <code>file_ready</code> to <code>true</code> as well.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;client_2&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$notificationId1&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_type&quot;</span><span class="p">:</span> <span class="s2">&quot;txt&quot;</span><span class="p">,</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_require&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;client_1&quot;</span><span class="p">,</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_accepted&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_ready&quot;</span><span class="p">:</span> <span class="kc">true</span>
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="p">&#x7d;</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;,</span>
+</div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="nt">&quot;client_1&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="nt">&quot;notifications&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="nt">&quot;$notificationId2&quot;</span><span class="p">:</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_type&quot;</span><span class="p">:</span> <span class="s2">&quot;txt&quot;</span><span class="p">,</span>
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_require&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+</div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;client_2&quot;</span><span class="p">,</span>
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_accepted&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;file_ready&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>                    <span class="nt">&quot;recipient_notification&quot;</span><span class="p">:</span> <span class="s2">&quot;notificationId1&quot;</span>
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>                <span class="p">&#x7d;</span>
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="p">&#x7d;</span>
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;</span>
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">&#x7d;</span>
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p><em>There is a possible security hole here.</em> </p>
+
+<p><em>Request F</em> :- Since client 2 is listening to his collection his child<em>changed event get fired when client 1 changes the `file</em>ready<code>to</code>true`. Client 2 will then download the file from client 1&rsquo;s file collection. </p>
+
+<h3>Conclusion</h3>
+
+<p>Firebase proves to be a valuable service to perform realtime operations and file transfer using handshake protocol is successful due to this. My next adventure would be to use WebRTC to power up the handshake. </p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 03:36</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

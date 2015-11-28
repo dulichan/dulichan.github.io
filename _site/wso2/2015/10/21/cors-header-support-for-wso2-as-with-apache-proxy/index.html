@@ -1,0 +1,250 @@
+<html>
+  <head>
+    <meta content='CORS header support for WSO2 App Server with Apache Proxy - Tinker's thoughts~' property='og:title' />
+    <title>CORS header support for WSO2 App Server with Apache Proxy - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/wso2/2015/10/21/cors-header-support-for-wso2-as-with-apache-proxy/' property='og:url' />
+  <meta content="I will be explaining how to provide support for CORS (Cross Origin Resource Sharing) headers for JAX-RS services host..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/wso2/2015/09/16/return-404-by-default-in-wso2-esb/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/microservices/2015/11/09/personal-finance-with-microservices/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>21 Oct 2015</div>
+            CORS header support for WSO2 App Server with Apache Proxy
+          </h1>
+          <p>I will be explaining how to provide support for CORS (Cross Origin Resource Sharing) headers for JAX-RS services hosted on WSO2 Application Server. The support will be provided using Apache which is the proxy. I am going to use a sample deployed in WSO2 App server to demonstrate. </p>
+
+<p>I have written a previous blog post on setting up <a href="http://dulitha.me/blog/2014/09/07/load-balancing-proxy-for-wso2-servers/">SSL on the Apache server</a>. Please refer that for instructions on setting up SSL. Below is the configuration to setup CORS. Substitute ’10.100.0.167’ for the machine IP/domain. 
+&lt;!&ndash; more &ndash;&gt;
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>Listen 443
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>NameVirtualHost <em>:443
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;VirtualHost *:443&gt;
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    #ProxyPreserveHost On
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLEngine On
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyEngine On
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>    #SSLCipherSuite HIGH:MEDIUM
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyVerify none
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyCheckPeerCN off
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLProxyCheckPeerName off
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteEngine On
+</div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteCond %&#x7b;REQUEST_METHOD&#x7d; OPTIONS
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteRule ^(.</em>)$ $1 [R=200,L]
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='16' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='17' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Set the path to SSL certificate
+</div></div><div data-line='18' class='code-highlight-row numbered'><div class='code-highlight-line'>    # Usage: SSLCertificateFile /path/to/cert.pem
+</div></div><div data-line='19' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLCertificateFile /private/etc/apache2/certs/server.crt
+</div></div><div data-line='20' class='code-highlight-row numbered'><div class='code-highlight-line'>    SSLCertificateKeyFile /private/etc/apache2/certs/server.key
+</div></div><div data-line='21' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='22' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='23' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxyPass / https://10.100.0.167:9444/
+</div></div><div data-line='24' class='code-highlight-row numbered'><div class='code-highlight-line'>    ProxyPassReverse / https://10.100.0.167:9444/
+</div></div><div data-line='25' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='26' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;IfModule mod_headers.c&gt;
+</div></div><div data-line='27' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Origin (.<em>) AccessControlAllowOrigin=$1
+</div></div><div data-line='28' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Access-Control-Request-Headers (.</em>) AccessControlAllowHeaders=$1
+</div></div><div data-line='29' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always add Access-Control-Allow-Origin %&#x7b;AccessControlAllowOrigin&#x7d;e env=AccessControlAllowOrigin
+</div></div><div data-line='30' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Credentials true
+</div></div><div data-line='31' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Methods &quot;POST, GET, OPTIONS, DELETE, PUT&quot;
+</div></div><div data-line='32' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Headers %&#x7b;AccessControlAllowHeaders&#x7d;e env=AccessControlAllowHeaders
+</div></div><div data-line='33' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;/IfModule&gt;
+</div></div><div data-line='34' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='35' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;/VirtualHost&gt;</div></div></pre></div></figure></p>
+
+<p>You need to have the below mods enabled in order for the above configuration to work.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_module libexec/apache2/mod_proxy.so
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_connect_module libexec/apache2/mod_proxy_connect.so
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_ftp_module libexec/apache2/mod_proxy_ftp.so
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_http_module libexec/apache2/mod_proxy_http.so
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_scgi_module libexec/apache2/mod_proxy_scgi.so
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_ajp_module libexec/apache2/mod_proxy_ajp.so
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule proxy_balancer_module libexec/apache2/mod_proxy_balancer.so
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule ssl_module libexec/apache2/mod_ssl.so
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule setenvif_module libexec/apache2/mod_setenvif.so
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'>LoadModule headers_module libexec/apache2/mod_headers.so</div></div></pre></div></figure>
+
+<p>What happens in the above config is that it will automatically generate the response for the preflight request (OPTIONS). This is done by the below config snippet</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteEngine On
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteCond %&#x7b;REQUEST_METHOD&#x7d; OPTIONS
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    RewriteRule ^(.*)$ $1 [R=200,L]</div></div></pre></div></figure>
+
+<p>There are several headers that need to be setup for to enable CORS. They are setup using the headers module.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>&lt;IfModule mod_headers.c>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Origin (.*) AccessControlAllowOrigin=$1
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>           SetEnvIf Access-Control-Request-Headers (.*) AccessControlAllowHeaders=$1
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always add Access-Control-Allow-Origin %&#x7b;AccessControlAllowOrigin&#x7d;e env=AccessControlAllowOrigin
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Credentials true
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>           Header always set Access-Control-Allow-Headers %&#x7b;AccessControlAllowHeaders&#x7d;e env=AccessControlAllowHeaders
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    &lt;/IfModule></div></div></pre></div></figure>
+
+<p>An interesting thing I am doing here is - using the Origin header to write back the <code>Access-Control-Allow-Origin</code>. It is generally recommended to only allow required methods and explicit headers. </p>
+
+<p>To test the above setup I am going to use the sample JAX-RS artifact that is deployed to test this. Run the below JavaScript in the console of a different website. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">(&#x7b;</span> 
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;https://10.100.0.151/jaxrs_basic/services/customers/customerservice/customers&#39;</span><span class="p">,</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> 
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="nx">headers</span><span class="o">:</span> <span class="p">&#x7b;</span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">&#x7d;,</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="nx">data</span><span class="o">:</span> <span class="p">&#x7b;&#x7d;,</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">&#x7b;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Load was performed.&#39;</span><span class="p">);</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>  <span class="p">&#x7d;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;);</span></div></div></pre></div></figure>
+ 
+
+<p>If run the above code snippet, commenting the headers in the apache config file - we’ll be getting the below errors from the browser.
+<img src="http://i.imgur.com/7JsUqwB.png"  ></p>
+
+<p>If successfully - you’ll get a 400 response (since the payload is incorrect) but the request passed through to the WSO2 App server.</p>
+
+<p><img src="http://i.imgur.com/vQ8HqkG.png"  ></p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 04:58</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

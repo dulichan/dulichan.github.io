@@ -1,0 +1,201 @@
+<html>
+  <head>
+    <meta content='Absolute.js for JaggeryJS - Tinker's thoughts~' property='og:title' />
+    <title>Absolute.js for JaggeryJS - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/javascript/2013/06/05/simple-mvc-for-jaggeryjs/' property='og:url' />
+  <meta content="The objective of absolute.js is to handle front-end development work with simplicity and conventions inside jaggeryJS..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/thoughts/2013/05/21/distraction-and-genius/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/javascript/2013/06/23/some-thoughts-on-caramel-dot-js/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>05 Jun 2013</div>
+            Absolute.js for JaggeryJS
+          </h1>
+          <p>The objective of absolute.js is to handle front-end development work with simplicity and conventions inside jaggeryJS. So let&rsquo;s get to the facts quick.</p>
+
+<h3>Simple Configuration</h3>
+
+<p>First we have to redirect all the requests from jaggery configuration file to a jag file.</p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>jaggery.conf</span></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="s2">&quot;welcomeFiles&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;index.jag&quot;</span><span class="p">],</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="s2">&quot;urlMappings&quot;</span><span class="o">:</span> <span class="p">[</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;/*&quot;</span><span class="p">,</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>            <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="s2">&quot;/index.jag&quot;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'>        <span class="p">&#x7d;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="p">],</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="s2">&quot;logLevel&quot;</span><span class="o">:</span> <span class="s2">&quot;info&quot;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>Inside the index.jag file we will setup absolute.js and give a configuration. Also note that defaults are handled inside absolute.js. </p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>index.jag</span></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="o">&lt;%</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">var</span> <span class="nx">mvc</span> <span class="o">=</span> <span class="nx">require</span> <span class="p">(</span><span class="s1">&#39;absolute.js&#39;</span><span class="p">).</span><span class="nx">mvc</span><span class="p">;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kd">var</span> <span class="nx">mvcp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mvc</span><span class="p">(&#x7b;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="nx">SERVER_URL</span><span class="o">:</span><span class="s2">&quot;/publisher/&quot;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;);</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">mvcp</span><span class="p">.</span><span class="nx">route</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="o">%&gt;</span></div></div></pre></div></figure>
+
+<p>Now absolute.js is ready for request processing. </p>
+
+<h3>Conventions</h3>
+
+<p>First we have to look into the folder layout -</p>
+
+<p><img src="/images/filestructure.png"  ></p>
+
+<p>The concept of mvc is simple. We have a model, a view and a controller. In our example app we haven&rsquo;t followed a model approach to data (Note: This is also very simple since JSON and database library bridge exists in jaggery).</p>
+
+<h4>A Request procedure</h4>
+
+<p>The request comes to the absolute.js module. If the requst URI is - &rsquo;/publisher/console/list&rsquo; </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">*   &#39;/publisher&#39; is the context of the app
+*   &#39;/console&#39; is the controller 
+*   &#39;/list&#39; is the view 
+</code></pre></div>
+<p>Controllers are contained in the controller folder of the context application. The controller is created with the same name. Inside the controller it will have a function named after the view. absolute.js will execute this function and the return json object will be provided to the template engine.</p>
+
+<figure class='code-highlight-figure'><figcaption class='code-highlight-caption'><span class='code-highlight-caption-title'>console.js</span></figcaption><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">list</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()&#x7b;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="p">&#x7b;</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;Chan&quot;</span><span class="p">,</span> <span class="nx">quote</span><span class="o">:</span><span class="s2">&quot;I was a king I had a gold throne&quot;</span><span class="p">&#x7d;;</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">manager</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()&#x7b;</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="c1">//response.sendRedirect(&#39;/publisher/console/list&#39;);</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="p">&#x7b;</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;Chan&quot;</span><span class="p">,</span> <span class="nx">quote</span><span class="o">:</span><span class="s2">&quot;I was a king I had a gold throne&quot;</span><span class="p">&#x7d;;</span>
+</div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nx">upload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()&#x7b;</span>
+</div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="k">return</span> <span class="p">&#x7b;</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;Chan&quot;</span><span class="p">,</span> <span class="nx">quote</span><span class="o">:</span><span class="s2">&quot;I was a king I had a gold throne&quot;</span><span class="p">&#x7d;;</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="p">&#x7d;</span></div></div></pre></div></figure>
+
+<p>I am currently working on the layout and partials handling inside absolute.js. </p>
+
+<p>Note:- Initial credit of the idea of building a simple mvc framework for jaggery goes to  <a href="https://twitter.com/chatu_dil" title="Dilan">Dilan</a></p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 10:53</span>
+</p>
+
+
+        </section>
+      </div>
+      
+
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

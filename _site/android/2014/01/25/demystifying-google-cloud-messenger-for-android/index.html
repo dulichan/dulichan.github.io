@@ -1,0 +1,216 @@
+<html>
+  <head>
+    <meta content='Demystifying Google Cloud Messenger for Android - Tinker's thoughts~' property='og:title' />
+    <title>Demystifying Google Cloud Messenger for Android - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/android/2014/01/25/demystifying-google-cloud-messenger-for-android/' property='og:url' />
+  <meta content="_Cloud messenger_ - from the term itself presents an idea of delivering messages to interested parties in the "Cloud"..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/git/2014/01/23/better-management-of-git-code-bases/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/git/2014/02/06/git-tips/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>25 Jan 2014</div>
+            Demystifying Google Cloud Messenger for Android
+          </h1>
+          <p><em>Cloud messenger</em> - from the term itself presents an idea of delivering messages to interested parties in the &ldquo;Cloud&rdquo;. What it particularly means is that we can send messages from our app servers or backend systems to mobile devices without any TCP or connection pain. </p>
+
+<h3>Big picture of working</h3>
+
+<p><img src="https://docs.google.com/drawings/d/1YVUd7bzLGHjiPVK-vyiItKfzygoBkHecH3iKP44M6SM/pub?w=547&amp;h=439" alt="Working diagram of GCM and Devices"></p>
+
+<ol>
+<li>Our system that sends messages to GCM servers. This happens asynchronously. There is an HTTP API available and libraries wrapping around the HTTP API. </li>
+<li>Google Cloud Messenger is responsible for queuing and delivering messages to devices based on throttling rules, battery consumption rate, device idle state and network performance. The delivery model of GCM is bit different. This will be further elaborated throughout the post.</li>
+<li>Devices will receive messages and the operative system invoke the relevant application the message was intended to. For those of who knows Android will know that this is done via an <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html">Intent Broadcast</a>. 
+&lt;!&ndash; more &ndash;&gt;
+### Sender ID and API key
+Since Google provides us this service - we have to login to the Google Console and <a href="http://developer.android.com/google/gcm/gs.html#create-proj">create a project</a>. API key is a static key you get from the console. Sender ID is a bit of complex topic. </li>
+</ol>
+
+<p>A project can have 100 sender ids - and all these sender ids have to be stated in the client as well. This is useful for a scenario where there are multiple workers sending messages. </p>
+
+<p><img src="https://docs.google.com/drawings/d/1R2jH2Dx_Ass6fXFHG8wOobxsieGZFze4Bsy5PwgglFk/pub?w=860&amp;h=371" alt="Example of Multiple Sender IDs in play"></p>
+
+<h3>Enrollment of Devices</h3>
+
+<p>When we register a device with GCM for Sender IDs we obtain a Device ID. This Device ID has to be saved in our Backend servers to dispatch messages successfully to devices afterwards. </p>
+
+<h3>Messaging architecture</h3>
+
+<p>When we send a message to a device - GCM place the message in a queue for the Device ID. This temporary queue will hold up to 100 messages. When 100 messages count limit is exceeded - GCM will delete all the messages from the temporary queue and add a message stating <a href="http://developer.android.com/google/gcm/adv.html">&ldquo;deleted_messages&rdquo;</a>.</p>
+
+<h4>Delivering states</h4>
+
+<p>We cannot be certain that devices are always online and GCM makes it a top priority to use the battery of devices efficiently. Due to this - immediate dispatch of messages from GCM to Device is not possible. There are several methods to make this disadvantage to an advantage. </p>
+
+<h4>Collapse Key</h4>
+
+<p>There is another important attribute called <em>Collapse Key</em>. For example our Email server sends a message to the device saying that new mail has arrived. In the normal procedure if we send 3 messages saying that email has arrived - the device contacts the  server 3 times. GCM has a method to replace the message as well in the queue. We can setup a collapse key for those types of messages that needs to be replaced. Only one message will be applied if the collapse key is set. But beware only 4 collapse keys are allowed for a project. </p>
+
+<h4>Time to live</h4>
+
+<p>This flag is set before sending the message to GCM. It specifies when messages are expired. For example if we have a live scoring app (Soccer scores)  we are sending notifications to devices of the current score for matches. We can set it up to discard messages when they are older than a day. </p>
+
+<p>Important note here is - if you set a message expiration to 0 (meaning now or never) GCM will not throttle that message. It will try it&rsquo;s very best to deliver it. On the other hand GCM will store your messages up to 4 weeks.</p>
+
+<h4>Delay while idle</h4>
+
+<p>If we are sending messages that are of no immediate concern we can set delay while idle flag to true which delays the message if the device is in idle state. </p>
+
+<h4>Sending messages with payloads</h4>
+
+<p>Apart from messages that asks the device to contact the server, the server can send a payload with the GCM message. This payload is usually a JSON object and the maximum size allowed is 4kb. It&rsquo;s advisable to use these payload messages carefully because there might be scenarios where these messages can be lost. </p>
+
+<p>The post was rather long but it has many aspects regarding message delivery. I learned about this when I was involved with building the <a href="http://wso2mobile.com/">EMM solution</a> at WSO2.</p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 17:05</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+<html>
+  <head>
+    <meta content='Git tips - Tinker's thoughts~' property='og:title' />
+    <title>Git tips - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/git/2014/02/06/git-tips/' property='og:url' />
+  <meta content="This post is a continuation of my post in regards to [Git branching](http://dulitha.me/blog/2014/01/23/better-managem..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/android/2014/01/25/demystifying-google-cloud-messenger-for-android/">
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class="right">
+      <a href="/javascript/2014/02/18/introduction-to-jaggery-dot-js-from-cmbjs/">
+        ›
+      </a>
+    </div>
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>06 Feb 2014</div>
+            Git tips
+          </h1>
+          <p>This post is a continuation of my post in regards to <a href="http://dulitha.me/blog/2014/01/23/better-management-of-git-code-bases/">Git branching</a>. Below are some tips I gather around when using git.</p>
+
+<h2>Basics</h2>
+
+<p>Below commands are used to get around with git. These are used on daily basis to get work done.</p>
+
+<h3>Git Init</h3>
+
+<p>The first most important command to initialize a repository. It will make the .git folder inside your codebase. Next used command with this command it the git add command. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>git init
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>git add .</div></div></pre></div></figure>
+
+<!-- more -->
+
+<h3>Git clone</h3>
+
+<p>Clone command allows you to clone a repository from another repository (Github mostly). One key difference if you are coming from the SVN world is that - git clone will copy everything about the repository from the server to the client. Also if you have setup <a href="https://help.github.com/articles/generating-ssh-keys">SSH keys for Github</a> it&rsquo;s better to add the ssh clone url rather than the https one. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>git clone git@github.com:wso2/wso2mobileserver.git
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>git clone https://github.com/wso2/wso2mobileserver.git</div></div></pre></div></figure>
+
+<p>After cloning git will create a remote called origin which points to repo you cloned.</p>
+
+<h3>Git add</h3>
+
+<p>Git allows you to specifically mention which files are source controlled and which files are not. You can add a file to the repository and then the changes will be tracked in subsequent usage. &rsquo;.&rsquo; can also be used to add everything in the directory and wild cards such as &rsquo;.java&rsquo; are allowed. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>git add .
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>git add *.java</div></div></pre></div></figure>
+
+<p>In Git there is a space called staging area. Index is a staging area (sometimes it&rsquo;s referred as the staging area as well) for changes to files. When we perform a <code>git add .</code> - git essentially add whatever specified in the command to the <a href="http://alblue.bandlem.com/2011/10/git-tip-of-week-understanding-index.html">index</a>. </p>
+
+<h3>Git status</h3>
+
+<p>A basic command to get the status of the index. This command is used to find </p>
+
+<ul>
+<li>Modified files</li>
+<li>New files</li>
+<li>Current branch</li>
+</ul>
+
+<p>Complementing to the Git add is the status which is used check the index before committing whether you have everything in order. <a href="http://git-scm.com/docs/git-diff">Git diff</a> can also be used to compare git working directory and the index.</p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>git add .
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>git status</div></div></pre></div></figure>
+
+<h3>Git commit</h3>
+
+<p>When we say <code>git commit</code> - changes in the index are added to the repository. By including a log message to the commit- we can make it meaningful for later use. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>git add .
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>git commit</div></div></pre></div></figure>
+
+<p>Couple of useful flags used with this command are </p>
+
+<ul>
+<li><strong>-a</strong> - add changes of the working directory for the commit (basically running a git add .)</li>
+<li><strong>-m</strong> - State the message inline - <code>git -m &quot;First commit&quot;</code></li>
+<li><strong>&ndash;dry-run</strong> - is used to run the commit command with all the parameters to see what happens to check. When using this flag nothing is committed to the repo. </li>
+</ul>
+
+<p>I&rsquo;ll be having another post about git tips since this post is getting too long.</p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 13:46</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>
