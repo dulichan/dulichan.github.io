@@ -3,8 +3,8 @@ layout: page
 title: About
 ---
 
-Give people something to read and get to know you. Here's my attempt: this is [Mu-An](http://muan.co), a designer developer who lives in London at the moment.
+I self describe myself as the continous improver who believes in changing the world. Talk to me on startup ideas, JavaScript, Internet of Things. I also love to travel the world and experience different cultures. 
 
-Tweet at [@muanchiou](http://twitter.com/muanchiou), read my code on [GitHub](http://github.com/muan), see my designs on [Dribbble](http://dribbble.com/muan), find my CV on [LinkedIn](http://uk.linkedin.com/in/muanchiou).
+I also do beer reviews on [Drinking Beer](http://drinkingbeer.tumblr.com/post/134106577460/oh-stella-one-of-a-kind-belgium-beer-thats-a).
 
-This theme is made by me. You have a nice day. ♥
+Credits for this beautiful theme goes to [@muanchiou](http://twitter.com/muanchiou)

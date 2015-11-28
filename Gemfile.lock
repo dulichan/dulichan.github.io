@@ -9,6 +9,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.8)
+    autoprefixer-rails (2.2.0.20140804)
+      execjs
     blankslate (2.1.2.4)
     classifier-reborn (2.0.3)
       fast-stemmer (~> 1.0)
@@ -98,6 +100,62 @@ GEM
     net-dns (0.8.0)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
+    octopress (3.0.11)
+      jekyll (>= 2.0)
+      mercenary (~> 0.3.2)
+      octopress-deploy
+      octopress-escape-code (~> 2.0)
+      octopress-hooks (~> 2.0)
+      redcarpet (~> 3.0)
+      titlecase
+    octopress-autoprefixer (1.0.1)
+      autoprefixer-rails (~> 2.2)
+      jekyll (>= 2.0)
+      octopress-hooks (~> 2.0)
+    octopress-code-highlighter (4.2.6)
+      colorator (~> 0.1)
+      octopress-hooks
+    octopress-codeblock (1.0.5)
+      octopress-code-highlighter (~> 4.2)
+    octopress-codefence (1.6.1)
+      octopress-code-highlighter (~> 4.2)
+      octopress-hooks (~> 2.1)
+    octopress-date-format (3.0.3)
+      jekyll (>= 2.0)
+    octopress-deploy (1.3.0)
+      colorator
+    octopress-escape-code (2.0.6)
+      octopress-hooks (~> 2.0)
+    octopress-filters (1.4.0)
+      jekyll
+      octopress-hooks (~> 2.0)
+      rubypants-unicode
+      titlecase
+    octopress-gist (1.3.5)
+      octopress-code-highlighter (~> 4.2)
+    octopress-hooks (2.6.1)
+      jekyll (>= 2.0)
+    octopress-image-tag (1.1.0)
+      jekyll
+    octopress-include-tag (1.1.3)
+      jekyll (>= 2.0)
+      octopress-tag-helpers (~> 1.0)
+    octopress-ink (1.2.1)
+      jekyll (>= 2.0)
+      octopress (~> 3.0)
+      octopress-autoprefixer
+      octopress-date-format
+      octopress-filters (~> 1.1)
+      octopress-hooks (~> 2.2)
+      octopress-include-tag (~> 1.0)
+      uglifier (~> 2.5)
+    octopress-quote-tag (1.0.4)
+      jekyll
+      rubypants
+    octopress-solarized (1.1.2)
+      octopress-ink (~> 1.0)
+    octopress-tag-helpers (1.0.8)
+      jekyll (>= 2.0)
     parslet (1.5.0)
       blankslate (~> 2.0)
     posix-spawn (0.3.11)
@@ -110,16 +168,22 @@ GEM
       ffi (>= 0.5.0)
     rdiscount (2.1.7)
     redcarpet (3.3.2)
+    rubypants (0.2.0)
+    rubypants-unicode (0.2.5)
     safe_yaml (1.0.4)
     sass (3.4.19)
     terminal-table (1.5.2)
     thread_safe (0.3.5)
+    titlecase (0.1.1)
     toml (0.1.2)
       parslet (~> 1.5.0)
     typhoeus (0.8.0)
       ethon (>= 0.8.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uglifier (2.7.2)
+      execjs (>= 0.3.0)
+      json (>= 1.8.0)
     yajl-ruby (1.2.1)
 
 PLATFORMS
@@ -127,6 +191,10 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-
-BUNDLED WITH
-   1.10.6
+  octopress
+  octopress-codeblock
+  octopress-codefence
+  octopress-gist
+  octopress-image-tag
+  octopress-quote-tag
+  octopress-solarized

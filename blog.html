@@ -1,0 +1,13 @@
+---
+layout: blog
+---
+
+<ul class="posts">
+  {% for post in site.posts %}
+  <li>
+    <small class="datetime muted" style="width: 100px;" data-time="{{ post.date }}">{{ post.date | date_to_string }} </small>
+    <a class="blog-links" href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+    <!-- <p>{{"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pulvinar, nisi eget consectetur iaculis, dolor mi semper ipsum, sit amet maximus tellus diam ultrices neque. Nulla et mauris vitae quam tristique ornare vitae a mi. Nunc dictum est ut sem posuere luctus. Vestibulum consequat velit at lobortis tincidunt."| truncate: 140, '.'}}</p> -->
+  </li>
+  {% endfor %}
+</ul>
