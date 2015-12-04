@@ -8,6 +8,8 @@
       text-align: left; }
     body #container #ind-instagram, body #container #ind-linkedin {
       display: none; }
+    body .code-highlight-pre {
+      font-size: 0.5em; }
     body #container .links, body #container .content {
       padding: 15px; }
       body #container .links section.post, body #container .content section.post {

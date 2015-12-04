@@ -1,0 +1,249 @@
+<html>
+  <head>
+    <meta content='Solving Relationship Problems With Graph Technology - Tinker's thoughts~' property='og:title' />
+    <title>Solving Relationship Problems With Graph Technology - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script src='/javascripts/custom.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/databases/2015/12/01/solving-relationship-problems-with-graph-technology/' property='og:url' />
+  <meta content="Before I get started - I am not ranting about a new dating algorithm I wrote. This post is going to be about Graph da..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/microservices/2015/11/09/personal-finance-with-microservices/">
+        ‹
+      </a>
+    </div>
+  
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>01 Dec 2015</div>
+            Solving Relationship Problems With Graph Technology
+          </h1>
+          <p>Before I get started - I am not ranting about a new dating algorithm I wrote. This post is going to be about Graph databases and kickstarting work with python. Before I talk about graph databases, I’ll briefly explain how I found myself hacking with Neo4j graph database at 2 am in the morning. </p>
+
+<p>I wanted to build a tool for finding opportunities. For example - I have an idea for connected shoes. I would like to find a co-founder to work with on this project. Reaching out to my network to find a suitable candidate is troublesome. The manual process includes me having to either open a Facebook chat or shoot an email to get my intentions across. </p>
+
+<p>How useful would it be for me to go to a user interface and type-</p>
+
+<p><img src="http://i.imgur.com/7Ntqk5x.png" alt="Graph query" ></p>
+
+<h2>Graph Databases</h2>
+
+<p>Enter graph databases. They are meant to purely manage relationships and properties of actors. It’s a different data model compared to our traditional Relation Databases. Let’s try my problem mapped to the Graph data model.</p>
+
+<p><img src="https://docs.google.com/drawings/d/1abGADNkheQP4Co9dku-c5F06z8pzdTQZPaSXAU09x90/pub?w=452&h=227"  ></p>
+
+<p>As you can see - Naveen is a node and under it has properties. The part missing is relationships to other nodes.</p>
+
+<p><img src="https://docs.google.com/drawings/d/1lwl3cOZLOBlY1YTJcGHRtzCXMeXyVhVQzJHV6rq-dmc/pub?w=868&h=510"  ></p>
+
+<p>Now we know that Naveen works at a software company specialized in JavaScript. </p>
+
+<p>If a tool could suggest few people like this based on a loose criteria, it would definitely help my search. </p>
+
+<h2>Getting dirty with Neo4J &amp; Python</h2>
+
+<p>Since the above example is advance, I am going to start work by a simple query. Find me all the people who have skills of “JavaScript” and interests on “IoT”.</p>
+
+<p>I picked the most popular graph database: <a href="http://neo4j.com/download/">Neo4j</a> for a spin. It’s made with Java/Scala and it&rsquo;s fairly easy to get started. You can point a database directory and Neo4j loads up a graph database server. </p>
+
+<p><img src="http://i.imgur.com/LjsY8wm.png" alt="Neo4j startup window" ></p>
+
+<p>The browser console can be accessed through <code>http://localhost:7474/browser/</code>. First I am going to run some queries and enter data into Neo4j. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>CREATE (arshad:Person &#x7b; name: 'Arshad Mohideen', age: 24, interests:["startup", "entrepreneurship", "toastmaster"], skills: ["public-speaking", "people-management"]&#x7d;)
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>CREATE (naveen:Person &#x7b; name: 'Naveen Dilan', age: 23, interests:["startup", "entrepreneurship", "iot"], skills: ["javascript", "event-organizing"]&#x7d;)
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'>CREATE (yuda:Person &#x7b; name: 'Yudhanjaya Wijeratne', age: 24, interests:["startup", "entrepreneurship", "journalism", "media"], skills: ["writing", "public-speaking"]&#x7d;)</div></div></pre></div></figure>
+
+<p>In case you are wondering - this query language is called <a href="http://neo4j.com/developer/cypher-query-language/">Cypher</a>. It’s like a SQL and JSON combination. <code>:Person</code> is called a label in the graph world. Labels are used to categorize nodes. Properties are defined inside the JSON property bag. In the Graph world below are the main concepts:-</p>
+
+<ol>
+<li>Nodes</li>
+<li>Relationships</li>
+<li>Properties</li>
+<li>Traversal </li>
+</ol>
+
+<p><a href="http://neo4j.com/docs/stable/graphdb-neo4j.html">Neo4j Docs</a> elaborates more on these concepts. </p>
+
+<p>Next I am using flask to create a quick web api. This web api return “Hello World” for now. The recommended method to access Neo4j from Python is through <a href="http://py2neo.org/2.0/">py2neo</a>. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c">#we are importing the below entities from py2neo</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kn">from</span> <span class="nn">py2neo</span> <span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">Node</span><span class="p">,</span> <span class="n">Relationship</span><span class="p">,</span> <span class="n">authenticate</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kn">import</span> <span class="nn">collections</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="kn">import</span> <span class="nn">json</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='7' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+</div></div><div data-line='8' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='9' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="nd">@app.route</span><span class="p">(</span><span class="s">&quot;/query&quot;</span><span class="p">)</span>
+</div></div><div data-line='10' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="k">def</span> <span class="nf">query</span><span class="p">():</span>
+</div></div><div data-line='11' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="k">return</span> <span class="err">“</span><span class="n">Hello</span> <span class="n">World</span><span class="err">”</span>
+</div></div><div data-line='12' class='code-highlight-row numbered'><div class='code-highlight-line'> </div></div><div data-line='13' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+</div></div><div data-line='14' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
+</div></div><div data-line='15' class='code-highlight-row numbered'><div class='code-highlight-line'>   <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div></pre></div></figure>
+
+<p>How do you work with Neo4j? You need to obtain a Graph object. Before getting the graph object, I need to authenticate with the password.<br>
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="n">authenticate</span><span class="p">(</span><span class="s">&quot;localhost:7474&quot;</span><span class="p">,</span> <span class="s">&quot;neo4j&quot;</span><span class="p">,</span> <span class="s">&quot;abc123&quot;</span><span class="p">)</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span></div></div></pre></div></figure></p>
+
+<p>After authenticating - a Cypher query needs to be crafted to match for for the problem I had earlier. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'>MATCH (p:Person) 
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'>WHERE ANY(interests IN p.interests WHERE interests =~ '(?i).*iot.*') 
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'>      AND ANY(skills IN p.skills WHERE skills =~ '(?i).*javascript.*') 
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>RETURN p</div></div></pre></div></figure>
+
+<p>The above query can be translated to: “Find all persons with interests of ‘iot’ and skills of ‘javascript’”. Now I can use this query in python to extract the data. </p>
+
+<figure class='code-highlight-figure'><div class='code-highlight'><pre class='code-highlight-pre'><div data-line='1' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="n">statement</span> <span class="o">=</span> <span class="s">&quot;MATCH (p:Person) WHERE ANY(interests IN p.interests WHERE interests =~ &#39;(?i).* iot.*&#39;) AND ANY(skills IN p.skills WHERE skills =~ &#39;(?i).* javascript.*&#39;) RETURN p&quot;</span>
+</div></div><div data-line='2' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="n">person_list</span> <span class="o">=</span> <span class="p">[]</span>
+</div></div><div data-line='3' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">cypher</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">statement</span><span class="p">):</span>
+</div></div><div data-line='4' class='code-highlight-row numbered'><div class='code-highlight-line'>    <span class="n">person_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">person</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</div></div><div data-line='5' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="c">#convert the person_list to a JSON array</span>
+</div></div><div data-line='6' class='code-highlight-row numbered'><div class='code-highlight-line'><span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">person_list</span><span class="p">)</span></div></div></pre></div></figure>
+  
+
+<p>When I do a curl to the endpoint - I get a JSON response of only naveen’s node. </p>
+
+<h2>Footnotes</h2>
+
+<p>With workarounds and hacks - we have bended relational databases to perform what graph databases are naturally good at. In many business use cases, the relationships between objects can be used to infer greater knowledge. An example would be: Handing a baby toys coupon for a shopper who bought some napkins. To calculate this using a traditional database - it would take lot of processing power. <a href="https://dzone.com/articles/mysql-vs-neo4j-large-scale">Graph database</a> hits the sweet spot on these types of problems. Now let me hook this up with LinkedIn API and I’ll have the ultimate stalker tool in my hands.  </p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 07:52</span>
+</p>
+
+
+        </section>
+      </div>
+      
+        <div class="block">
+
+  <div class="button">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+
+    <div class="button spaced">
+      <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial" data-action="like"></div>
+    </div>
+</div>
+      
+
+      
+        <div class="block">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = "duli-chan"; 
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>

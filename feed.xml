@@ -7,6 +7,102 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Solving Relationship Problems With Graph Technology</title>
+        <description>&lt;p&gt;Before I get started - I am not ranting about a new dating algorithm I wrote. This post is going to be about Graph databases and kickstarting work with python. Before I talk about graph databases, I’ll briefly explain how I found myself hacking with Neo4j graph database at 2 am in the morning. &lt;/p&gt;
+
+&lt;p&gt;I wanted to build a tool for finding opportunities. For example - I have an idea for connected shoes. I would like to find a co-founder to work with on this project. Reaching out to my network to find a suitable candidate is troublesome. The manual process includes me having to either open a Facebook chat or shoot an email to get my intentions across. &lt;/p&gt;
+
+&lt;p&gt;How useful would it be for me to go to a user interface and type-&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/7Ntqk5x.png&quot; alt=&quot;Graph query&quot; &gt;&lt;/p&gt;
+
+&lt;h2&gt;Graph Databases&lt;/h2&gt;
+
+&lt;p&gt;Enter graph databases. They are meant to purely manage relationships and properties of actors. It’s a different data model compared to our traditional Relation Databases. Let’s try my problem mapped to the Graph data model.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://docs.google.com/drawings/d/1abGADNkheQP4Co9dku-c5F06z8pzdTQZPaSXAU09x90/pub?w=452&amp;h=227&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see - Naveen is a node and under it has properties. The part missing is relationships to other nodes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://docs.google.com/drawings/d/1lwl3cOZLOBlY1YTJcGHRtzCXMeXyVhVQzJHV6rq-dmc/pub?w=868&amp;h=510&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;Now we know that Naveen works at a software company specialized in JavaScript. &lt;/p&gt;
+
+&lt;p&gt;If a tool could suggest few people like this based on a loose criteria, it would definitely help my search. &lt;/p&gt;
+
+&lt;h2&gt;Getting dirty with Neo4J &amp;amp; Python&lt;/h2&gt;
+
+&lt;p&gt;Since the above example is advance, I am going to start work by a simple query. Find me all the people who have skills of “JavaScript” and interests on “IoT”.&lt;/p&gt;
+
+&lt;p&gt;I picked the most popular graph database: &lt;a href=&quot;http://neo4j.com/download/&quot;&gt;Neo4j&lt;/a&gt; for a spin. It’s made with Java/Scala and it&amp;rsquo;s fairly easy to get started. You can point a database directory and Neo4j loads up a graph database server. &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/LjsY8wm.png&quot; alt=&quot;Neo4j startup window&quot; &gt;&lt;/p&gt;
+
+&lt;p&gt;The browser console can be accessed through &lt;code&gt;http://localhost:7474/browser/&lt;/code&gt;. First I am going to run some queries and enter data into Neo4j. &lt;/p&gt;
+
+&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;CREATE (arshad:Person &amp;#x7b; name: &#39;Arshad Mohideen&#39;, age: 24, interests:[&quot;startup&quot;, &quot;entrepreneurship&quot;, &quot;toastmaster&quot;], skills: [&quot;public-speaking&quot;, &quot;people-management&quot;]&amp;#x7d;)
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;CREATE (naveen:Person &amp;#x7b; name: &#39;Naveen Dilan&#39;, age: 23, interests:[&quot;startup&quot;, &quot;entrepreneurship&quot;, &quot;iot&quot;], skills: [&quot;javascript&quot;, &quot;event-organizing&quot;]&amp;#x7d;)
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;5&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;CREATE (yuda:Person &amp;#x7b; name: &#39;Yudhanjaya Wijeratne&#39;, age: 24, interests:[&quot;startup&quot;, &quot;entrepreneurship&quot;, &quot;journalism&quot;, &quot;media&quot;], skills: [&quot;writing&quot;, &quot;public-speaking&quot;]&amp;#x7d;)&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;In case you are wondering - this query language is called &lt;a href=&quot;http://neo4j.com/developer/cypher-query-language/&quot;&gt;Cypher&lt;/a&gt;. It’s like a SQL and JSON combination. &lt;code&gt;:Person&lt;/code&gt; is called a label in the graph world. Labels are used to categorize nodes. Properties are defined inside the JSON property bag. In the Graph world below are the main concepts:-&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Nodes&lt;/li&gt;
+&lt;li&gt;Relationships&lt;/li&gt;
+&lt;li&gt;Properties&lt;/li&gt;
+&lt;li&gt;Traversal &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://neo4j.com/docs/stable/graphdb-neo4j.html&quot;&gt;Neo4j Docs&lt;/a&gt; elaborates more on these concepts. &lt;/p&gt;
+
+&lt;p&gt;Next I am using flask to create a quick web api. This web api return “Hello World” for now. The recommended method to access Neo4j from Python is through &lt;a href=&quot;http://py2neo.org/2.0/&quot;&gt;py2neo&lt;/a&gt;. &lt;/p&gt;
+
+&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;c&quot;&gt;#we are importing the below entities from py2neo&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;py2neo&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Relationship&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;authenticate&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;collections&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;5&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;json&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;6&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;7&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;8&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;9&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;nd&quot;&gt;@app.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;/query&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;10&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;11&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;“&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Hello&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;World&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;”&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;12&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;13&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;14&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;   &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;debug&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;15&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;   &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;How do you work with Neo4j? You need to obtain a Graph object. Before getting the graph object, I need to authenticate with the password.&lt;br&gt;
+&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;n&quot;&gt;authenticate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;localhost:7474&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;neo4j&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abc123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;After authenticating - a Cypher query needs to be crafted to match for for the problem I had earlier. &lt;/p&gt;
+
+&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;MATCH (p:Person) 
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;WHERE ANY(interests IN p.interests WHERE interests =~ &#39;(?i).*iot.*&#39;) 
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;      AND ANY(skills IN p.skills WHERE skills =~ &#39;(?i).*javascript.*&#39;) 
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;RETURN p&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;The above query can be translated to: “Find all persons with interests of ‘iot’ and skills of ‘javascript’”. Now I can use this query in python to extract the data. &lt;/p&gt;
+
+&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;n&quot;&gt;statement&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;MATCH (p:Person) WHERE ANY(interests IN p.interests WHERE interests =~ &amp;#39;(?i).* iot.*&amp;#39;) AND ANY(skills IN p.skills WHERE skills =~ &amp;#39;(?i).* javascript.*&amp;#39;) RETURN p&amp;quot;&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;n&quot;&gt;person_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;graph&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cypher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;statement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    &lt;span class=&quot;n&quot;&gt;person_list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;5&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;c&quot;&gt;#convert the person_list to a JSON array&lt;/span&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;6&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dumps&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+  
+
+&lt;p&gt;When I do a curl to the endpoint - I get a JSON response of only naveen’s node. &lt;/p&gt;
+
+&lt;h2&gt;Footnotes&lt;/h2&gt;
+
+&lt;p&gt;With workarounds and hacks - we have bended relational databases to perform what graph databases are naturally good at. In many business use cases, the relationships between objects can be used to infer greater knowledge. An example would be: Handing a baby toys coupon for a shopper who bought some napkins. To calculate this using a traditional database - it would take lot of processing power. &lt;a href=&quot;https://dzone.com/articles/mysql-vs-neo4j-large-scale&quot;&gt;Graph database&lt;/a&gt; hits the sweet spot on these types of problems. Now let me hook this up with LinkedIn API and I’ll have the ultimate stalker tool in my hands.  &lt;/p&gt;
+</description>
+        <pubDate>Tue, 01 Dec 2015 07:52:17 -0500</pubDate>
+        <link>/databases/2015/12/01/solving-relationship-problems-with-graph-technology/</link>
+        <guid isPermaLink="true">/databases/2015/12/01/solving-relationship-problems-with-graph-technology/</guid>
+      </item>
+    
+      <item>
         <title>Personal Finance with Microservices</title>
         <description>&lt;p&gt;Personal finance is an interesting topic. Everyone has their own ideal ways of managing personal finances. Being too lazy to enter CSV file to a Numbers sheet, I went ahead and wrote a micro service to hook up expenses into a Google sheet. &lt;/p&gt;
 
@@ -847,80 +943,6 @@ In the new Apache version (Apache/2.4.16) below additional configs are needed to
         <pubDate>Fri, 23 May 2014 08:16:20 -0400</pubDate>
         <link>/iot/2014/05/23/conference-for-internet-of-things-solidcon/</link>
         <guid isPermaLink="true">/iot/2014/05/23/conference-for-internet-of-things-solidcon/</guid>
-      </item>
-    
-      <item>
-        <title>Setup an Apache Proxy for Carbon Servers on Mac OS X</title>
-        <description>&lt;p&gt;Setting up an Apache server on reverse proxy is a very basic requirement for deployments. What I am going to explain in this blog post is about setting up a reverse proxy for a WSO2 Carbon web server that is running on port 9763 (for HTTP) . In fact you can skip the carbon specific configurations if you want to set it up for another server. So let&amp;rsquo;s get started.&lt;/p&gt;
-
-&lt;p&gt;First you&amp;rsquo;ll have to install apache server on your machine. This alone is one of the most complex steps as it is dependent on your platform (OS X, Windows, Linux). I am going to only show steps for OS X but Proxy Configuration is same for all operative systems. &lt;/p&gt;
-
-&lt;h2&gt;Where is Apache?&lt;/h2&gt;
-
-&lt;p&gt;You don&amp;rsquo;t have to worry about installing apache cause OS X already has apache server inside of it. It&amp;rsquo;s located under &lt;code&gt;/etc/apache2&lt;/code&gt; directory (Optionally you can also install &lt;a href=&quot;http://www.apachefriends.org/index.html&quot;&gt;XAMPP&lt;/a&gt; as well). &lt;/p&gt;
-
-&lt;p&gt;To start the apache server -&lt;/p&gt;
-
-&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;sudo apachectl start&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2&gt;Setup the Proxy Configs&lt;/h2&gt;
-
-&lt;p&gt;Now the role of the reverse proxy is to send traffic coming out from the network to another host. &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://upload.wikimedia.org/wikipedia/commons/6/67/Reverse_proxy_h2g2bob.svg&quot; alt=&quot;Reverse Proxy&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;We can setup a proxy in apache to do this where &lt;code&gt;localhost:9763&lt;/code&gt; will go to &lt;code&gt;localhost:80&lt;/code&gt;. Port &lt;code&gt;80&lt;/code&gt; is the default http port. For this blog post I will be focusing on setting up proxy over http. I am still looking into https proxy. I&amp;rsquo;ll link that post here once I am done with it. &lt;/p&gt;
-
-&lt;p&gt;There is a config file in apache located in &lt;code&gt;/etc/apache2/httpd.conf&lt;/code&gt;. You have to include the below section in the bottom of that file.&lt;/p&gt;
-
-&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;figcaption class=&#39;code-highlight-caption&#39;&gt;&lt;span class=&#39;code-highlight-caption-title&#39;&gt;/etc/apache2/httpd.conf&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;IfModule mod_proxy.c&amp;gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt; &lt;span class=&quot;c&quot;&gt;# Reverse Proxy&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;5&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;ProxyRequests On
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;6&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;Proxy *&amp;gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;7&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    Order deny,allow
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;8&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;    Allow from all
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;9&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;/Proxy&amp;gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;10&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;ProxyVia On
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;11&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;ProxyPass / http://localhost:9763/
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;12&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;ProxyPassReverse / http://localhost:9763/
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;13&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;ProxyPreserveHost On
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;14&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&amp;lt;/IfModule&amp;gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;Now restart apache -&lt;/p&gt;
-
-&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;sudo apachectl restart&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2&gt;Carbon configurations&lt;/h2&gt;
-
-&lt;p&gt;To configure carbon for reverse proxy you have to change the file -&lt;code&gt;$SERVER_HOME/repository/conf/tomcat/catalina-server.xml&lt;/code&gt;.  In the configuration file first &lt;code&gt;Connector&lt;/code&gt; should be changed to below configuration. &lt;code&gt;proxyPort&lt;/code&gt; attribute was added to the &lt;code&gt;Connector&lt;/code&gt;.&lt;/p&gt;
-
-&lt;figure class=&#39;code-highlight-figure&#39;&gt;&lt;figcaption class=&#39;code-highlight-caption&#39;&gt;&lt;span class=&#39;code-highlight-caption-title&#39;&gt;catalina-server.xml&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&#39;code-highlight&#39;&gt;&lt;pre class=&#39;code-highlight-pre&#39;&gt;&lt;div data-line=&#39;1&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;Connector&lt;/span&gt;  &lt;span class=&quot;na&quot;&gt;protocol=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;org.apache.coyote.http11.Http11NioProtocol&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;2&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;9763&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;3&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;redirectPort=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;9443&amp;quot;&lt;/span&gt; 
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;4&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;proxyPort=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;80&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;5&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;bindOnInit=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;6&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;maxHttpHeaderSize=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;8192&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;7&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;acceptorThreadCount=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;2&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;8&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;maxThreads=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;250&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;9&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;minSpareThreads=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;50&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;10&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;disableUploadTimeout=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;11&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;connectionUploadTimeout=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;120000&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;12&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;maxKeepAliveRequests=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;200&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;13&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;acceptCount=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;200&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;14&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;server=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;WSO2 Carbon Server&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;15&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;compression=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;on&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;16&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;compressionMinSize=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;2048&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;17&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;noCompressionUserAgents=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;gozilla, traviata&amp;quot;&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;18&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;compressableMimeType=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg&amp;quot;&lt;/span&gt; 
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;19&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;                &lt;span class=&quot;na&quot;&gt;URIEncoding=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;The apache server will proxy traffic coming through port &lt;code&gt;80&lt;/code&gt; to port &lt;code&gt;9763&lt;/code&gt;. &lt;/p&gt;
-</description>
-        <pubDate>Sat, 15 Mar 2014 00:00:00 -0400</pubDate>
-        <link>/wso2/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/</link>
-        <guid isPermaLink="true">/wso2/2014/03/15/setup-an-apache-proxy-for-carbon-servers-on-mac-osx/</guid>
       </item>
     
   </channel>
