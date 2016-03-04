@@ -7,6 +7,110 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Understanding Microservices in Context of a Kitchen</title>
+        <description>&lt;p&gt;Look to your left, you find microservices, look to your TV, Netflix is on microservices. Microservices have seeped into the technology matrix like a silent assassin over the years. The Unix mantra of “Do one thing and do it well” is applied to microservices thus making it leaner. Microservices architectural style composes of few key principles that address how services will be developed and deployed. &lt;/p&gt;
+
+&lt;p&gt;My metaphor to explain microservices is to use a restaurant. Imagine if Mr. Krabs (the owner) of Krusty Krab from the Sponge Bob franchise decided to implement a microservices-based approach to his restaurant.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/IUqEVv5.jpg&quot;  &gt;&lt;/p&gt;
+
+&lt;h2&gt;Krusty Krab (the Monolith)&lt;/h2&gt;
+
+&lt;p&gt;Let’s take the current situation — a customer visits the restaurant and leaves orders at the front desk(manned by Squidward). The front desk bills the customer and queues the kitchen for a Krabby Patty (a Burger). The customer waits at the counter till his food is ready.&lt;/p&gt;
+
+&lt;p&gt;In the kitchen — one man (or rather a sponge) take the receipt from the queue and begins the process to make the burger. He gets the ingredients from the stores, grills the patties and makes a burger. He calls the Front desk back saying that the patty is ready.&lt;/p&gt;
+
+&lt;p&gt;At the front desk, Squidward hands the burger to the customer. The customer finds a seat and enjoys the burger.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/wYJzHCz.png&quot;  &gt;&lt;/p&gt;
+
+&lt;h2&gt;Analysis&lt;/h2&gt;
+
+&lt;p&gt;In the current scenario, the restaurant cannot scale easily for a large number of customers. Also, the front desk and kitchen of the restaurant are built in a monolithic manner. We can think of Squidward at the front desk as the front-end UI of the application that the customers interact with. Spongebob is the backend that grills the tasty patty and assembles the Krabby Patty.&lt;/p&gt;
+
+&lt;p&gt;In this model — it’s not very easy to scale the restaurant to support many more customers. The counter (Front-end) of the restaurant can easily be scaled up by hiring a few people to work with Squidward (aka spinning up new instances to handle the UI traffic). As for the Kitchen (backend) — we can also hire a few people to do the exact work Sponge Bob does.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/3OEl8Pm.png&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;But the kitchen is different from the counter. Kitchen involves division of labor where different people need to do different tasks. One has to grill the patty. One has to heat the buns. One has the make the fries. Due to this Mr. Krabs needs to be able to scale different divisions.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/F3R3DnK.png&quot;  &gt;&lt;/p&gt;
+
+&lt;h2&gt;Micro-services based approach&lt;/h2&gt;
+
+&lt;p&gt;In the micro-services architecture, we approach the problem differently. We try to understand the components of a business operation. In our case, the kitchen. Below are some identifiable components of the kitchen.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Burgers section&lt;/li&gt;
+&lt;li&gt;Fries section&lt;/li&gt;
+&lt;li&gt;Salads section (Let’s milk money off the Vegetarians!) &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;One thing you’d notice is that the components we chose can execute without any inter-dependencies.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/67ohPjZ.png&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;We can also fine tune the business process to improve the customer experience. Right now, the customer has to wait near the counter while his order is getting ready. How about we implement the system where the customer can listen to an announcement for his receipt number. This would be a better approach for our kitchen since the kitchen doesn’t have to get blocked for serving a single customer. We could serve multiple customers faster.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/0xi3gBX.png&quot;  &gt;&lt;/p&gt;
+
+&lt;h2&gt;Martin Fowlers’s characteristics applied&lt;/h2&gt;
+
+&lt;p&gt;According &lt;a href=&quot;http://martinfowler.com/articles/microservices.html&quot;&gt;Martin Fowler&lt;/a&gt; there a few characteristics that make good microservices. &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Componentization via Services&lt;/li&gt;
+&lt;li&gt;  Organized around Business capabilities&lt;/li&gt;
+&lt;li&gt;Products not projects&lt;/li&gt;
+&lt;li&gt;Smart endpoints and dumb pipes&lt;/li&gt;
+&lt;li&gt;Design for failure&lt;/li&gt;
+&lt;li&gt;Decentralized governance &amp;amp; Data management&lt;/li&gt;
+&lt;li&gt;Evolutionary design&lt;/li&gt;
+&lt;li&gt;Infrastructure automation&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Componentization via Services&lt;/h3&gt;
+
+&lt;p&gt;According to our example, we can have each section become a service. Eg:- Burger service. Each service is exposed to the front office via remote calls. This would be the receipt received by the burger section. In the tech world, remote calls are called over the network. Practical modes of this could be types of communication such as HTTP, AMQP, MQTT or Thrift. &lt;/p&gt;
+
+&lt;h3&gt;Organized around Business capabilities&lt;/h3&gt;
+
+&lt;p&gt;Our services are based very specifically on the sections of the kitchen. In the business world, this would require us to think a bit more since there are inter connections between business capabilities. We’re not going to have a maintenance service in our services list since that’s not focused on business capabilities. Each service is responsible for cleaning up it’s own resources.&lt;/p&gt;
+
+&lt;h3&gt;Products not projects&lt;/h3&gt;
+
+&lt;p&gt;This is mostly about a point of reference. When we look at the burger service as a product instead of a project, we would look at the support and maintenance of the product. Products will live for a lifetime. In our case, as long as the Krusty crab is making Krabby Patties, our burger service is going to be utilized.&lt;/p&gt;
+
+&lt;h3&gt;Smart endpoints and dumb pipes&lt;/h3&gt;
+
+&lt;p&gt;What this means according to our example is that the counter would call each service to get the items ready. When the customer give an order of a Pork Krabby Patty, 2 vegetable salads and medium fries, the counter will invoke each service with the properties. It will respond to the customer based on the output of the service calls to the microservices. Kasun Indrasiri’s his blog post on &lt;a href=&quot;https://dzone.com/articles/microservices-in-practice-1&quot;&gt;Microservices in Practice&lt;/a&gt; explains a few more methods of communicating between services. He mentions, “Therefore, for complex Microservices use cases, rather than having point-to-point connectivity or a central ESB, we could have a lightweight central messaging bus which can provide an abstraction layer for the microservices and that can be used to implement various non-functional capabilities. This style is known as API Gateway style.”&lt;/p&gt;
+
+&lt;h3&gt;Design for failure&lt;/h3&gt;
+
+&lt;p&gt;Since our business use cases are isolated into services — our front-end system can be built for failure. The burger can still be cooked even if fries are not available. The front end can make a refund for the fries rather than canceling the order.&lt;/p&gt;
+
+&lt;h3&gt;Decentralized Governance &amp;amp; Data Management&lt;/h3&gt;
+
+&lt;p&gt;Governance is a method of controlling and standardizing procedures. Governance ideally happens differently according to different business units. The standard of preparing a burger is different from the standard for preparing fries. Also, we don’t have to hire only Brits to make fish and fries, we can hire an Indian too. In the real world governance is decentralized. In the services world, we can actually build our burger service in Java and fries service in Python. It’s a polyglot paradise.&lt;/p&gt;
+
+&lt;p&gt;Data management can also be set up separately. The burger section can manage it’s data in Excel while the fries section can use the old school notebook. Our services also don’t have to worry about a central database. One service can be backed up via MySQL and the other via MongoDB.&lt;/p&gt;
+
+&lt;h3&gt;Evolutionary design&lt;/h3&gt;
+
+&lt;p&gt;Our design &amp;amp; policy decisions don’t have inter-dependencies with other services. Due to this new freedom, our design can evolve at a much faster pace. Mr Krab can buy a machine for the fries section and do away with the employees. Our Fries service can use Python 3 features rather than sticking to Python 2.X.&lt;/p&gt;
+
+&lt;h3&gt;Infrastructure automation&lt;/h3&gt;
+
+&lt;p&gt;This is an analogy I can’t attribute to our restaurant metaphor. But nevertheless, in our service layer what this means is that we can automate deployments. This is done using small isolated containers that can run in mass hardware. A popular method is to use Docker (container technology) with Kubernetes (cluster management technology). Carlos Sanchez writes a lengthy &lt;a href=&quot;http://www.infoq.com/articles/scaling-docker-with-kubernetes&quot;&gt;blog post on InfoQ&lt;/a&gt; on this subject which is definitely worth a read. One of the key differences of SOA and microservices is the focus given to the deployment of services. Microservices are meant to be highly available and fault tolerant. The technology mix of Docker, and Kubernates allows us to efficiently do this. &lt;/p&gt;
+
+&lt;p&gt;My next post would be an introduction to the new microservices framework by WSO2, &lt;a href=&quot;https://github.com/wso2/msf4j&quot;&gt;MSF4j&lt;/a&gt; and how we can build the above mentioned Burger Service as a microservice.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 14 Feb 2016 14:00:28 +0530</pubDate>
+        <link>/2016/02/14/understanding-microservices-in-context-of-a-kitchen/</link>
+        <guid isPermaLink="true">/2016/02/14/understanding-microservices-in-context-of-a-kitchen/</guid>
+      </item>
+    
+      <item>
         <title>Solving Relationship Problems With Graph Technology</title>
         <description>&lt;p&gt;Before I get started - I am not ranting about a new dating algorithm I wrote. This post is going to be about Graph databases and kickstarting work with python. Before I talk about graph databases, I’ll briefly explain how I found myself hacking with Neo4j graph database at 2 am in the morning. &lt;/p&gt;
 
@@ -97,7 +201,7 @@
 
 &lt;p&gt;With workarounds and hacks - we have bended relational databases to perform what graph databases are naturally good at. In many business use cases, the relationships between objects can be used to infer greater knowledge. An example would be: Handing a baby toys coupon for a shopper who bought some napkins. To calculate this using a traditional database - it would take lot of processing power. &lt;a href=&quot;https://dzone.com/articles/mysql-vs-neo4j-large-scale&quot;&gt;Graph database&lt;/a&gt; hits the sweet spot on these types of problems. Now let me hook this up with LinkedIn API and I’ll have the ultimate stalker tool in my hands.  &lt;/p&gt;
 </description>
-        <pubDate>Tue, 01 Dec 2015 07:52:17 -0500</pubDate>
+        <pubDate>Tue, 01 Dec 2015 18:22:17 +0530</pubDate>
         <link>/databases/2015/12/01/solving-relationship-problems-with-graph-technology/</link>
         <guid isPermaLink="true">/databases/2015/12/01/solving-relationship-problems-with-graph-technology/</guid>
       </item>
@@ -261,7 +365,7 @@
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;118&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;// Running locally using Node.&lt;/span&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&#39;119&#39; class=&#39;code-highlight-row numbered&#39;&gt;&lt;div class=&#39;code-highlight-line&#39;&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&lt;a href=&quot;&amp;amp;#x7b;%3C/span%3E%3Cspan%20class=%22nx%22%3Eparams%3C/span%3E%3Cspan%20class=%22o%22%3E:%3C/span%3E%20%3Cspan%20class=%22p%22%3E&amp;amp;#x7b;%3C/span%3E%3Cspan%20class=%22nx%22%3Esecret%3C/span%3E%3Cspan%20class=%22o%22%3E:%3C/span%3E%20%3Cspan%20class=%22s2%22%3E&amp;amp;quot;dgfdg45345jf0248234234&amp;amp;quot;%3C/span%3E%20%3Cspan%20class=%22p%22%3E,%3C/span%3E%3Cspan%20class=%22nx%22%3EattachmentURL%3C/span%3E%3Cspan%20class=%22o%22%3E:%3C/span%3E%3Cspan%20class=%22s2%22%3E&amp;amp;quot;CSV%20URL&amp;amp;quot;%3C/span%3E%3Cspan%20class=%22p%22%3E&amp;amp;#x7d;&amp;amp;#x7d;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;exports&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&lt;/a&gt;;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/p&gt;
 </description>
-        <pubDate>Mon, 09 Nov 2015 05:20:51 -0500</pubDate>
+        <pubDate>Mon, 09 Nov 2015 15:50:51 +0530</pubDate>
         <link>/microservices/2015/11/09/personal-finance-with-microservices/</link>
         <guid isPermaLink="true">/microservices/2015/11/09/personal-finance-with-microservices/</guid>
       </item>
@@ -353,7 +457,7 @@
 
 &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/vQ8HqkG.png&quot;  &gt;&lt;/p&gt;
 </description>
-        <pubDate>Wed, 21 Oct 2015 04:58:41 -0400</pubDate>
+        <pubDate>Wed, 21 Oct 2015 14:28:41 +0530</pubDate>
         <link>/wso2/2015/10/21/cors-header-support-for-wso2-as-with-apache-proxy/</link>
         <guid isPermaLink="true">/wso2/2015/10/21/cors-header-support-for-wso2-as-with-apache-proxy/</guid>
       </item>
@@ -394,7 +498,7 @@
 
 &lt;p&gt;The historical reason of returning 202 lies back where the main sequence was shipped as a sample not as the default behavior of the WSO2 ESB product. It should be customized to suite the needs required. The same applies to &lt;em&gt;resource&lt;/em&gt;mismatch&lt;em&gt;handler&lt;/em&gt; sequence. &lt;/p&gt;
 </description>
-        <pubDate>Wed, 16 Sep 2015 07:16:25 -0400</pubDate>
+        <pubDate>Wed, 16 Sep 2015 16:46:25 +0530</pubDate>
         <link>/wso2/2015/09/16/return-404-by-default-in-wso2-esb/</link>
         <guid isPermaLink="true">/wso2/2015/09/16/return-404-by-default-in-wso2-esb/</guid>
       </item>
@@ -556,9 +660,9 @@
 
 &lt;p&gt;&lt;code&gt;org.wso2.carbon.um.ws.api.stub&lt;/code&gt; is one such stub that can be perform operations available in WSO2 Components. A custom app can be used to build and register users using the services available.&lt;/p&gt;
 </description>
-        <pubDate>Mon, 08 Dec 2014 23:45:46 -0500</pubDate>
-        <link>/wso2/2014/12/08/calling-userstore-related-service-in-wso2-carbon-using-ws-client/</link>
-        <guid isPermaLink="true">/wso2/2014/12/08/calling-userstore-related-service-in-wso2-carbon-using-ws-client/</guid>
+        <pubDate>Tue, 09 Dec 2014 10:15:46 +0530</pubDate>
+        <link>/wso2/2014/12/09/calling-userstore-related-service-in-wso2-carbon-using-ws-client/</link>
+        <guid isPermaLink="true">/wso2/2014/12/09/calling-userstore-related-service-in-wso2-carbon-using-ws-client/</guid>
       </item>
     
       <item>
@@ -640,9 +744,9 @@
 
 &lt;p&gt;I have made all the examples I brought up available as a &lt;a href=&quot;https://gist.github.com/dulichan/3ce43ee115359e99663b&quot;&gt;gist&lt;/a&gt;.  Play around with the code to get a hang of it. I started actually using Promises because of &lt;a href=&quot;http://thinky.io&quot;&gt;Thinky&lt;/a&gt; - an ORM client for RethinkDB. It’s an awesome ORM for RethinkDB, please check it out if you are using RethinkDB with Node. &lt;/p&gt;
 </description>
-        <pubDate>Wed, 08 Oct 2014 20:38:13 -0400</pubDate>
-        <link>/javascript/2014/10/08/javascript-promises-basics/</link>
-        <guid isPermaLink="true">/javascript/2014/10/08/javascript-promises-basics/</guid>
+        <pubDate>Thu, 09 Oct 2014 06:08:13 +0530</pubDate>
+        <link>/javascript/2014/10/09/javascript-promises-basics/</link>
+        <guid isPermaLink="true">/javascript/2014/10/09/javascript-promises-basics/</guid>
       </item>
     
       <item>
@@ -734,9 +838,9 @@
 
 &lt;p&gt;As for the enrollment part - I thought of writing a separate post on it. There are multiple enrollment mechanisms for IoT devices and the option we see is to support all of them. Right now - the implementation supports token based enrollment. This approach assumes that the agent knows a token that is already registered to a user on the device manager. &lt;/p&gt;
 </description>
-        <pubDate>Mon, 22 Sep 2014 20:02:03 -0400</pubDate>
-        <link>/iot/2014/09/22/python-based-device-agent-for-internet-of-things/</link>
-        <guid isPermaLink="true">/iot/2014/09/22/python-based-device-agent-for-internet-of-things/</guid>
+        <pubDate>Tue, 23 Sep 2014 05:32:03 +0530</pubDate>
+        <link>/iot/2014/09/23/python-based-device-agent-for-internet-of-things/</link>
+        <guid isPermaLink="true">/iot/2014/09/23/python-based-device-agent-for-internet-of-things/</guid>
       </item>
     
       <item>
@@ -836,7 +940,7 @@ In the new Apache version (Apache/2.4.16) below additional configs are needed to
 
 &lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;http://i.imgur.com/mQxyBjl.png&quot; alt=&quot;Real Deployment use case&quot; &gt;&lt;/p&gt;
 </description>
-        <pubDate>Sat, 06 Sep 2014 23:24:18 -0400</pubDate>
+        <pubDate>Sat, 06 Sep 2014 20:24:18 +0530</pubDate>
         <link>/wso2/2014/09/06/load-balancing-proxy-for-wso2-servers/</link>
         <guid isPermaLink="true">/wso2/2014/09/06/load-balancing-proxy-for-wso2-servers/</guid>
       </item>
@@ -901,48 +1005,9 @@ In the new Apache version (Apache/2.4.16) below additional configs are needed to
 
 &lt;p&gt;As for Arduino (single-threaded supported devices) we can’t unfortunately do the above agent method. The only method is to time slice and use a library. I am going to implement an Arduino  library for device management. Let’s see how it goes.&lt;/p&gt;
 </description>
-        <pubDate>Mon, 02 Jun 2014 16:43:50 -0400</pubDate>
-        <link>/iot/2014/06/02/internet-of-things-and-device-management/</link>
-        <guid isPermaLink="true">/iot/2014/06/02/internet-of-things-and-device-management/</guid>
-      </item>
-    
-      <item>
-        <title>Conference for Internet of Things- SolidCon</title>
-        <description>&lt;p&gt;This week, my colleagues and I were present at the O&amp;#39;Reilly SolidCon- an amazing conference that focused about Hardware and Software that brought forward the &amp;lsquo;Maker&amp;rsquo;s attitude&amp;rsquo;. First day kicked off with an exciting keynote on how robots will live, work and operate side by side with humans in the future(&lt;a href=&quot;http://www.rethinkrobotics.com/products/baxter/&quot;&gt;Baxter robot&lt;/a&gt;). Contrary to the many sci-fi movies, Baxter was quite safe to operate and very friendly. Baxter can be programmed using a graphical user interface. I had a go with it - by programming it to pickup a ball from one end of a line to another. &lt;/p&gt;
-
-&lt;p&gt;WSO2 presented a reference architecture for Internet of Things that focused on the requirements of IoT devices. We broke down the requirements of IoT devices into the below key categories -&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Connectivity and communications&lt;/li&gt;
-&lt;li&gt;Device Management&lt;/li&gt;
-&lt;li&gt;Data collection, analysis, and actuation&lt;/li&gt;
-&lt;li&gt;Scalability&lt;/li&gt;
-&lt;li&gt;Security&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Paul Fremantle, Co-founder &amp;amp; CTO of WSO2 wrote a white paper about the reference architecture which you can find on our &lt;a href=&quot;http://wso2.com/whitepapers/a-reference-architecture-for-the-internet-of-things/&quot;&gt;website&lt;/a&gt;. The white paper also has the mapping of WSO2 products to the bits and pieces of the reference architecture.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/0enT8Ko.png&quot; alt=&quot;Reference Architecture for IoT&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Our demonstration at the conference was an example of the reference architecture. There was one RaspberryPi that was connected to the Internet that pushed MQTT messages of the temperature of the conference hall. A Complex Event Processing server ran in the cloud performing realtime stream data analysis. If the temperature of the conference hall went beyond 30 C - the Complex Event Processing server sent an MQTT message to another RaspberryPi connected to the cloud which switched on the Fan once an MQTT message was received.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/PU51yjW.png&quot; alt=&quot;Reference Architecture for IoT with WSO2 Products&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;The &lt;a href=&quot;http://wso2.com/products/enterprise-mobility-manager/&quot;&gt;WSO2 Enterprise Mobility Manager&lt;/a&gt; product was improved to manage IoT devices (RaspberryPi&amp;rsquo;s in this scenario). An Agent software in the RaspberryPi contacts the EMM server periodically. The EMM server can perform operations on the actuators and view the data off the sensors. In this case - EMM server can view the temperature data on the screen and operate the fan of the RaspberryPi as well.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/DCY9cRz.jpg&quot; alt=&quot;The demonstration of the Internet of Things reference architecture&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Paul also conducted a talk at the Solid Conference about Security of IoT devices. It was a quite interesting talk that discussed why security is an all-important aspect for IoT devices since they are inside the perimeter of our privacy. &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/q1JQtWx.jpg&quot; alt=&quot;Paul giving his talk&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Overall, it was great being part of the event and I would love to attend SolidCon next year as well- especially since it&amp;rsquo;s a great place to meet hardware and software geeks and see a lot of interesting innovations in both categories. &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://i.imgur.com/Czwk4gM.jpg&quot; alt=&quot;Me describing about the demo to a customer&quot;&gt;&lt;/p&gt;
-</description>
-        <pubDate>Fri, 23 May 2014 08:16:20 -0400</pubDate>
-        <link>/iot/2014/05/23/conference-for-internet-of-things-solidcon/</link>
-        <guid isPermaLink="true">/iot/2014/05/23/conference-for-internet-of-things-solidcon/</guid>
+        <pubDate>Tue, 03 Jun 2014 02:13:50 +0530</pubDate>
+        <link>/iot/2014/06/03/internet-of-things-and-device-management/</link>
+        <guid isPermaLink="true">/iot/2014/06/03/internet-of-things-and-device-management/</guid>
       </item>
     
   </channel>

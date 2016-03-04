@@ -1,0 +1,232 @@
+<html>
+  <head>
+    <meta content='Understanding Microservices in Context of a Kitchen - Tinker's thoughts~' property='og:title' />
+    <title>Understanding Microservices in Context of a Kitchen - Tinker's thoughts~</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/style.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/responsive.css' rel='stylesheet' type='text/css' />
+<link href='/stylesheets/custom.css' rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href='/stylesheets/all-2751ab1d048569196037b7afce0ca9bb.css' media='all' rel='stylesheet' type='text/css'>
+<!-- - -->
+<script src='/javascripts/jquery.js' type='text/javascript'></script>
+<script src='/javascripts/pd.js' type='text/javascript'></script>
+<script src='/javascripts/basics.js' type='text/javascript'></script>
+<script src='/javascripts/custom.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="/og.png" property="og:image" />
+<meta content="164540446948" property="fb:app_id" />
+
+  <meta content='/2016/02/14/understanding-microservices-in-context-of-a-kitchen/' property='og:url' />
+  <meta content="Look to your left, you find microservices, look to your TV, Netflix is on microservices. Microservices have seeped in..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-47839614-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=164540446948";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  </head>
+  <body>
+    <header>
+<!-- <a id="go-back-home" href=""><img src="/images/scribble.png" alt="scribble" width="53" height="59"></a> -->
+<a id="go-back-home" href="/"><i class="fa fa-code-fork fa-5x"></i></a>
+<p>Tinker's thoughts~</p>
+</header>
+    <div id='container'>
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+      <section class="paging">
+  
+    <div class="left">
+      <a href="/databases/2015/12/01/solving-relationship-problems-with-graph-technology/">
+        ‹
+      </a>
+    </div>
+  
+  
+</section>
+      <div class="content">
+        <section class='post'>
+          <h1 class="upcase">
+            <div class='date'>14 Feb 2016</div>
+            Understanding Microservices in Context of a Kitchen
+          </h1>
+          <p>Look to your left, you find microservices, look to your TV, Netflix is on microservices. Microservices have seeped into the technology matrix like a silent assassin over the years. The Unix mantra of “Do one thing and do it well” is applied to microservices thus making it leaner. Microservices architectural style composes of few key principles that address how services will be developed and deployed. </p>
+
+<p>My metaphor to explain microservices is to use a restaurant. Imagine if Mr. Krabs (the owner) of Krusty Krab from the Sponge Bob franchise decided to implement a microservices-based approach to his restaurant.</p>
+
+<p><img src="http://i.imgur.com/IUqEVv5.jpg"  ></p>
+
+<h2>Krusty Krab (the Monolith)</h2>
+
+<p>Let’s take the current situation — a customer visits the restaurant and leaves orders at the front desk(manned by Squidward). The front desk bills the customer and queues the kitchen for a Krabby Patty (a Burger). The customer waits at the counter till his food is ready.</p>
+
+<p>In the kitchen — one man (or rather a sponge) take the receipt from the queue and begins the process to make the burger. He gets the ingredients from the stores, grills the patties and makes a burger. He calls the Front desk back saying that the patty is ready.</p>
+
+<p>At the front desk, Squidward hands the burger to the customer. The customer finds a seat and enjoys the burger.</p>
+
+<p><img src="http://i.imgur.com/wYJzHCz.png"  ></p>
+
+<h2>Analysis</h2>
+
+<p>In the current scenario, the restaurant cannot scale easily for a large number of customers. Also, the front desk and kitchen of the restaurant are built in a monolithic manner. We can think of Squidward at the front desk as the front-end UI of the application that the customers interact with. Spongebob is the backend that grills the tasty patty and assembles the Krabby Patty.</p>
+
+<p>In this model — it’s not very easy to scale the restaurant to support many more customers. The counter (Front-end) of the restaurant can easily be scaled up by hiring a few people to work with Squidward (aka spinning up new instances to handle the UI traffic). As for the Kitchen (backend) — we can also hire a few people to do the exact work Sponge Bob does.</p>
+
+<p><img src="http://i.imgur.com/3OEl8Pm.png"  ></p>
+
+<p>But the kitchen is different from the counter. Kitchen involves division of labor where different people need to do different tasks. One has to grill the patty. One has to heat the buns. One has the make the fries. Due to this Mr. Krabs needs to be able to scale different divisions.</p>
+
+<p><img src="http://i.imgur.com/F3R3DnK.png"  ></p>
+
+<h2>Micro-services based approach</h2>
+
+<p>In the micro-services architecture, we approach the problem differently. We try to understand the components of a business operation. In our case, the kitchen. Below are some identifiable components of the kitchen.</p>
+
+<ul>
+<li>Burgers section</li>
+<li>Fries section</li>
+<li>Salads section (Let’s milk money off the Vegetarians!) </li>
+</ul>
+
+<p>One thing you’d notice is that the components we chose can execute without any inter-dependencies.</p>
+
+<p><img src="http://i.imgur.com/67ohPjZ.png"  ></p>
+
+<p>We can also fine tune the business process to improve the customer experience. Right now, the customer has to wait near the counter while his order is getting ready. How about we implement the system where the customer can listen to an announcement for his receipt number. This would be a better approach for our kitchen since the kitchen doesn’t have to get blocked for serving a single customer. We could serve multiple customers faster.</p>
+
+<p><img src="http://i.imgur.com/0xi3gBX.png"  ></p>
+
+<h2>Martin Fowlers’s characteristics applied</h2>
+
+<p>According <a href="http://martinfowler.com/articles/microservices.html">Martin Fowler</a> there a few characteristics that make good microservices. </p>
+
+<ul>
+<li>Componentization via Services</li>
+<li>  Organized around Business capabilities</li>
+<li>Products not projects</li>
+<li>Smart endpoints and dumb pipes</li>
+<li>Design for failure</li>
+<li>Decentralized governance &amp; Data management</li>
+<li>Evolutionary design</li>
+<li>Infrastructure automation</li>
+</ul>
+
+<h3>Componentization via Services</h3>
+
+<p>According to our example, we can have each section become a service. Eg:- Burger service. Each service is exposed to the front office via remote calls. This would be the receipt received by the burger section. In the tech world, remote calls are called over the network. Practical modes of this could be types of communication such as HTTP, AMQP, MQTT or Thrift. </p>
+
+<h3>Organized around Business capabilities</h3>
+
+<p>Our services are based very specifically on the sections of the kitchen. In the business world, this would require us to think a bit more since there are inter connections between business capabilities. We’re not going to have a maintenance service in our services list since that’s not focused on business capabilities. Each service is responsible for cleaning up it’s own resources.</p>
+
+<h3>Products not projects</h3>
+
+<p>This is mostly about a point of reference. When we look at the burger service as a product instead of a project, we would look at the support and maintenance of the product. Products will live for a lifetime. In our case, as long as the Krusty crab is making Krabby Patties, our burger service is going to be utilized.</p>
+
+<h3>Smart endpoints and dumb pipes</h3>
+
+<p>What this means according to our example is that the counter would call each service to get the items ready. When the customer give an order of a Pork Krabby Patty, 2 vegetable salads and medium fries, the counter will invoke each service with the properties. It will respond to the customer based on the output of the service calls to the microservices. Kasun Indrasiri’s his blog post on <a href="https://dzone.com/articles/microservices-in-practice-1">Microservices in Practice</a> explains a few more methods of communicating between services. He mentions, “Therefore, for complex Microservices use cases, rather than having point-to-point connectivity or a central ESB, we could have a lightweight central messaging bus which can provide an abstraction layer for the microservices and that can be used to implement various non-functional capabilities. This style is known as API Gateway style.”</p>
+
+<h3>Design for failure</h3>
+
+<p>Since our business use cases are isolated into services — our front-end system can be built for failure. The burger can still be cooked even if fries are not available. The front end can make a refund for the fries rather than canceling the order.</p>
+
+<h3>Decentralized Governance &amp; Data Management</h3>
+
+<p>Governance is a method of controlling and standardizing procedures. Governance ideally happens differently according to different business units. The standard of preparing a burger is different from the standard for preparing fries. Also, we don’t have to hire only Brits to make fish and fries, we can hire an Indian too. In the real world governance is decentralized. In the services world, we can actually build our burger service in Java and fries service in Python. It’s a polyglot paradise.</p>
+
+<p>Data management can also be set up separately. The burger section can manage it’s data in Excel while the fries section can use the old school notebook. Our services also don’t have to worry about a central database. One service can be backed up via MySQL and the other via MongoDB.</p>
+
+<h3>Evolutionary design</h3>
+
+<p>Our design &amp; policy decisions don’t have inter-dependencies with other services. Due to this new freedom, our design can evolve at a much faster pace. Mr Krab can buy a machine for the fries section and do away with the employees. Our Fries service can use Python 3 features rather than sticking to Python 2.X.</p>
+
+<h3>Infrastructure automation</h3>
+
+<p>This is an analogy I can’t attribute to our restaurant metaphor. But nevertheless, in our service layer what this means is that we can automate deployments. This is done using small isolated containers that can run in mass hardware. A popular method is to use Docker (container technology) with Kubernetes (cluster management technology). Carlos Sanchez writes a lengthy <a href="http://www.infoq.com/articles/scaling-docker-with-kubernetes">blog post on InfoQ</a> on this subject which is definitely worth a read. One of the key differences of SOA and microservices is the focus given to the deployment of services. Microservices are meant to be highly available and fault tolerant. The technology mix of Docker, and Kubernates allows us to efficiently do this. </p>
+
+<p>My next post would be an introduction to the new microservices framework by WSO2, <a href="https://github.com/wso2/msf4j">MSF4j</a> and how we can build the above mentioned Burger Service as a microservice.</p>
+
+          <br />
+<p>
+  Till next time mate,<br/>
+  Dulitha
+  <span class="muted">at 14:00</span>
+</p>
+
+
+        </section>
+      </div>
+      
+
+      
+      <div class="block">
+  
+    <a target="_top"
+       class="main" 
+       href="/about">
+       About
+     </a>
+  
+    <a target="_top"
+       class="main" 
+       href="/blog">
+       Blog
+     </a>
+  
+    <a target="_blank"
+       class="main" 
+       href="http://github.com/dulichan">
+       GitHub
+     </a>
+  
+</div>
+    </div>
+    <footer>
+  <p>~Code is Poetry~</p>
+  <a id="go-back-home" href=""><i class="fa fa-code-fork fa-2x"></i></a>
+</footer>
+  </body>
+</html>
